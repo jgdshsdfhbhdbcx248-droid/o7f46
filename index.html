@@ -2,47 +2,45 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Access</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Changa:wght@500&display=swap" rel="stylesheet">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <title>نظام الوصول الآمن</title>
     
     <style>
         body {
-            background-color: #0a0a0a;
-            /* استعملنا خط Cairo لأنه يدعم المتصفحات القديمة والجديدة بوضوح عالي */
-            font-family: 'Cairo', sans-serif; 
+            background-color: #050505;
+            /* استخدمنا خطوط ويندوز الأصلية لضمان الوضوح والترتيب */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            color: #ffffff;
+            color: white;
         }
 
-        .login-card {
-            background: #141414;
-            padding: 40px;
-            border-radius: 15px;
-            border: 1px solid #222;
-            box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
+        .login-box {
+            background: #111;
+            padding: 50px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
             text-align: center;
-            width: 100%;
-            max-width: 380px;
+            width: 400px;
         }
 
         h1 {
-            font-family: 'Changa', sans-serif; /* خط أعرض وأفخم للعناوين */
-            font-weight: 700;
-            font-size: 28px;
+            font-size: 32px;
             margin-bottom: 10px;
-            color: #007bff;
+            color: #0084ff; /* أزرق ملكي */
+            font-weight: bold;
         }
 
         p {
-            font-size: 15px;
-            color: #aaa;
+            color: #777;
+            font-size: 16px;
             margin-bottom: 30px;
         }
 
@@ -50,53 +48,62 @@
             width: 100%;
             padding: 15px;
             margin-bottom: 25px;
+            background: #000;
+            border: 1px solid #444;
             border-radius: 10px;
-            border: 1px solid #333;
-            background: #050505;
-            color: #00ff00; /* لون الرمز أخضر للتمويه */
-            font-size: 22px;
+            color: #00ff00;
+            font-size: 24px;
             text-align: center;
-            letter-spacing: 5px; /* تباعد النجوم لجمالية أكثر */
             box-sizing: border-box;
+            outline: none;
+        }
+
+        input[type="password"]:focus {
+            border-color: #0084ff;
         }
 
         button {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(45deg, #007bff, #0056b3);
+            padding: 15px;
+            background: #0084ff;
             color: white;
             border: none;
             border-radius: 10px;
             font-size: 18px;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            font-family: 'Cairo', sans-serif;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0066cc;
         }
 
         .error {
-            color: #ff3333;
-            margin-top: 15px;
+            color: #ff4444;
+            margin-top: 20px;
             font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<div class="login-card">
+<div class="login-box">
     <h1>مرحباً بك أستاذ علي</h1>
-    <p>النظام يتطلب رمز الوصول للمتابعة</p>
-    <input type="password" id="pass" placeholder="••••••••">
-    <button onclick="login()">دخول النظام</button>
-    <div id="msg" class="error"></div>
+    <p>أدخل رمز الدخول للمتابعة</p>
+    <input type="password" id="passCode" placeholder="••••••••">
+    <button onclick="validate()">دخول النظام</button>
+    <div id="errorMsg" class="error"></div>
 </div>
 
 <script>
-    function login() {
-        const p = document.getElementById('pass').value;
-        if (p === "05195688") {
-            window.location.href = "control_panel.html";
+    function validate() {
+        const val = document.getElementById('passCode').value;
+        if (val === "05195688") {
+            // إضافة رقم عشوائي للرابط لإجبار المتصفح على فتح الصفحة الجديدة
+            window.location.href = "control_panel.html?v=" + Math.random();
         } else {
-            document.getElementById('msg').innerText = "الرمز غير صحيح.. تم تسجيل المحاولة";
+            document.getElementById('errorMsg').innerText = "الرمز غير صحيح.. تم تسجيل المحاولة";
         }
     }
 </script>
