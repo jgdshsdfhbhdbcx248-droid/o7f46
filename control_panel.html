@@ -3,86 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم المركزية</title>
+    <title>System Deep Scan</title>
     <style>
-        body { 
-            background-color: #000; 
-            color: #00ff00; 
-            font-family: sans-serif; 
-            text-align: center; 
-            margin: 0; 
-            padding: 20px;
-        }
-        .container {
-            background: rgba(10, 10, 10, 0.95);
-            border: 2px solid #ff0000;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 30px #ff0000;
-            display: inline-block;
-            width: 95%;
-            max-width: 500px;
-        }
-        h1 { color: #ff0000; font-size: 22px; text-shadow: 0 0 10px #ff0000; }
-        
-        /* تحسين عرض الصورة لتظهر كاملة */
-        .image-box {
-            width: 100%;
-            background: #111;
-            border: 1px solid #00ff00;
-            margin: 20px 0;
-            line-height: 0;
-        }
-        .image-box img {
-            width: 100%;
-            height: auto; /* يضمن بقاء الصورة كاملة حسب أبعادها الأصلية */
-            display: block;
-        }
-
-        .btn {
-            background: #00ff00;
-            color: #000;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        #status { display: none; margin-top: 15px; color: #fff; font-family: monospace; }
+        body { background: #000; color: #00ff00; font-family: 'Courier New', Courier, monospace; text-align: center; margin: 0; padding: 15px; overflow-x: hidden; }
+        .box { background: rgba(5, 5, 5, 0.95); border: 2px solid #ff0000; padding: 20px; border-radius: 10px; display: inline-block; width: 95%; max-width: 550px; box-shadow: 0 0 40px #ff0000; margin-top: 10px; }
+        .img-target { width: 100%; max-height: 250px; object-fit: contain; border: 1px solid #333; margin-bottom: 15px; }
+        .data-line { text-align: left; font-size: 16px; margin: 15px 0; padding: 8px; background: #050505; border-left: 3px solid #ff0000; }
+        .label { color: #ff0000; font-weight: bold; margin-right: 5px; }
+        #timer { font-size: 24px; color: #fff; margin: 10px 0; text-shadow: 0 0 10px #ff0000; }
+        #map-container { display: none; margin-top: 20px; border: 2px solid #00ff00; height: 300px; width: 100%; }
+        .btn-start { background: #ff0000; color: #fff; padding: 20px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 22px; border: none; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .loading-bar { width: 0%; height: 5px; background: #00ff00; margin-top: 5px; transition: width 0.5s; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>⚠️ تم رصد صفحة فيسبوك نشطة</h1>
+<div class="box">
+    <h2 style="color: #ff0000;">[مركز التعقب والتحليل العالمي]</h2>
+    
+    <div id="timer">الوقت المتبقي للتحليل: 30:00</div>
 
-        <div class="image-box">
-            <img src="https://raw.githubusercontent.com/jgdshsdfhbhdbcx248-droid/o7f46/main/photo_5197298453145390054_y.jpg" alt="Target Image">
-        </div>
+    <img src="https://raw.githubusercontent.com/jgdshsdfhbhdbcx248-droid/o7f46/main/photo_5197298453145390054_y.jpg" class="img-target">
 
-        <button class="btn" onclick="start()">جلب جميع المعلومات</button>
-
-        <div id="status">
-            [SYSTEM]: Extracting data... <span id="p">0%</span>
-        </div>
+    <div id="display-area">
+        <div class="data-line"><span class="label">الجهاز:</span> <span id="device">بانتظار بدء الفحص...</span><div class="loading-bar" id="bar1"></div></div>
+        <div class="data-line"><span class="label">عنوان IP:</span> <span id="ip">---.---.---.---</span><div class="loading-bar" id="bar2"></div></div>
+        <div class="data-line"><span class="label">المزود:</span> <span id="isp">جاري تحديد الهوية...</span><div class="loading-bar" id="bar3"></div></div>
     </div>
 
-    <script>
-        function start() {
-            document.getElementById('status').style.display = 'block';
-            let p = 0;
-            let i = setInterval(() => {
-                p += 2;
-                document.getElementById('p').innerText = p + "%";
-                if(p >= 100) {
-                    clearInterval(i);
-                    alert('تم جلب البيانات بنجاح إلى الفلاشة المتصلة');
-                }
-            }, 50);
-        }
-    </script>
+    <button class="btn-start" id="mainBtn" onclick="startDeepScan()">بدء عملية الاختراق والتعقب</button>
 
-</body>
-</html>
+    <div id="map-container">
+        <h3 style="color: #00ff00;">تم تحديد الموقع المباشر:</h3>
+        <iframe id="googleMap" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen></iframe>
+    </div>
+</div>
+
+<script>
+    const finalIP = "130.193.246.163";
+    const devices = ["Apple iPhone 15 Pro", "Samsung S24 Ultra", "Google Pixel 8", "Huawei Mate 60", "Xiaomi 14 Pro", "INFINIX"];
+    const ispName = "Allay Nawroz Telecom Company for Communication/Ltd.";
+    let totalSeconds = 1800; // 30 دقيقة بالثواني
+
+    function startDeepScan() {
+        document.getElementById('mainBtn').style.display = 'none';
+        
+        // عداد الوقت (30 دقيقة)
+        let timerInterval = setInterval(() => {
+            let mins = Math.floor(totalSeconds / 60);
+            let secs = totalSeconds % 60;
+            document.getElementById('timer').innerText = الوقت المتبقي للتحليل: ${mins}:${secs < 10 ? '0' : ''}${secs};
+            if (totalSeconds <= 0) clearInterval(timerInterval);
+            totalSeconds--;
+        }, 1000);
+
+        // 1. مرحلة الأجهزة (تستغرق 10 دقائق)
+        let devCount = 0;
+        let deviceLoop = setInterval(() => {
+            document.getElementById('device').innerText = devices[Math.floor(Math.random() * (devices.length - 1))];
+            document.getElementById('bar1').style.width = (devCount / 10) * 100 + "%";
+            devCount++;
+            if (devCount > 600) { // بعد 10 دقائق
+                clearInterval(deviceLoop);
+                document.getElementById('device').innerText = "INFINIX (DETECTED)";
+                document.getElementById('device').style.
