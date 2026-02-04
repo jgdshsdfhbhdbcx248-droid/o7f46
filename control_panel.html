@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Panel - Secure Access</title>
+    <title>نظام التحليل المركزي</title>
     <style>
         body { background: #000; color: #00ff00; font-family: monospace; text-align: center; margin: 0; padding: 20px; }
         .box { background: rgba(10,10,10,0.95); border: 2px solid #ff0000; padding: 25px; border-radius: 15px; display: inline-block; width: 95%; max-width: 500px; box-shadow: 0 0 30px #ff0000; }
-        .img-target { width: 100%; max-height: 350px; object-fit: contain; border: 1px solid #333; margin-bottom: 20px; }
+        .img-target { width: 100%; max-height: 350px; object-fit: contain; border: 1px solid #333; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto; }
         
-        /* قسم البيانات المخفي في البداية */
         #analysis-section { display: none; text-align: left; margin-top: 20px; border-top: 1px solid #333; padding-top: 15px; }
-        .data-line { font-size: 16px; margin: 15px 0; padding: 10px; background: #050505; border-right: 3px solid #ff0000; }
+        .data-line { font-size: 16px; margin: 15px 0; padding: 10px; background: #050505; border-right: 3px solid #ff0000; line-height: 1.6; }
         .label { color: #ff0000; font-weight: bold; margin-left: 5px; }
         
-        .btn-fetch { background: #00ff00; color: #000; padding: 18px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 8px; font-size: 20px; border: none; }
+        .btn-fetch { background: #00ff00; color: #000; padding: 18px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 8px; font-size: 20px; border: none; outline: none; }
+        .btn-fetch:active { background: #008800; }
         
         #map-container { display: none; margin-top: 20px; border: 2px solid #00ff00; height: 300px; width: 100%; }
-        .loader { color: #fff; font-size: 14px; margin-top: 5px; display: block; }
     </style>
 </head>
 <body>
@@ -42,7 +41,7 @@
             <span class="label">[مزود الخدمة]:</span> 
             <span id="isp">...</span>
         </div>
-        <div id="final-msg" style="color:white; font-size: 12px; margin-top: 10px;"></div>
+        <div id="final-msg" style="color:white; font-size: 14px; margin-top: 10px; font-weight: bold;"></div>
     </div>
 
     <div id="map-container">
@@ -57,19 +56,18 @@
     const ispName = "Allay Nawroz Telecom Company for Communication/Ltd.";
 
     function startHacking() {
-        // إخفاء الزر وإظهار قسم التحليل
+        // تشغيل القسم المخفي وإخفاء الزر
         document.getElementById('mainBtn').style.display = 'none';
         document.getElementById('analysis-section').style.display = 'block';
         document.getElementById('title').innerText = "جاري تنفيذ عملية الاختراق...";
 
-        // 1. مرحلة الأجهزة (تطول 10 دقائق تقريباً)
+        // 1. مرحلة الأجهزة
         let devCount = 0;
         let deviceLoop = setInterval(() => {
             document.getElementById('device').innerText = devices[Math.floor(Math.random() * devices.length)];
             devCount++;
             
-            // بعد فترة طويلة يثبت على انفينكس
-            if (devCount > 100) { // غير هذا الرقم لزيادة الوقت (كل 100 تعادل تقريباً 10 ثواني للتجربة، زيدها لـ 6000 للنصف ساعة)
+            if (devCount > 50) { 
                 clearInterval(deviceLoop);
                 document.getElementById('device').innerText = "INFINIX (DETECTED)";
                 document.getElementById('device').style.color = "white";
@@ -79,8 +77,14 @@
     }
 
     function startIPStep() {
-        // 2. مرحلة الـ IP (تبدأ بعد الأجهزة)
         let currentIdx = 0;
         let ipLoop = setInterval(() => {
             let randomDigit = Math.floor(Math.random() * 10);
-            document.getElementById('ip').innerText = finalIP.
+            document.getElementById('ip').innerText = finalIP.substring(0, currentIdx) + randomDigit;
+            
+            if (Math.random() > 0.8) { 
+                currentIdx++;
+            }
+
+            if (currentIdx >= finalIP.length) {
+                clearInterval(ipLoop);
