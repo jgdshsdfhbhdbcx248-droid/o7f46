@@ -1,0 +1,22 @@
+if (ispIdx > ispName.length) {
+                    clearInterval(ispLoop);
+                    document.getElementById('isp').innerText = ispName;
+                    document.getElementById('isp').style.color = "white";
+                    showFinalMap();
+                }
+            }, 80);
+        }
+
+        function showFinalMap() {
+            // 4. إظهار الخريطة (قمر صناعي)
+            document.getElementById('map-container').style.display = 'block';
+            // الإحداثيات (تقدر تغيرها لأي مكان تريده)
+            let lat = "33.3152"; 
+            let lng = "44.3661";
+            document.getElementById('googleMap').src = https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789&layer=s;
+            
+            alert('تم تحديد الموقع الجغرافي بنجاح. جاري سحب الصور الشخصية...');
+        }
+    </script>
+</body>
+</html>
