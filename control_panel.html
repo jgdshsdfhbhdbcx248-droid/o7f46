@@ -2,99 +2,20 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام التحليل المركزي</title>
+    <title>Control Panel</title>
     <style>
-        body { background: #000; color: #00ff00; font-family: 'Courier New', monospace; text-align: center; margin: 0; padding: 20px; }
-        .box { background: #050505; border: 2px solid #ff0000; padding: 20px; border-radius: 15px; display: inline-block; width: 95%; max-width: 500px; box-shadow: 0 0 25px #ff0000; }
-        
-        /* حاوية الصورة والزر */
-        #initial-view { display: block; }
-        .img-target { width: 100%; max-height: 350px; object-fit: contain; border: 1px solid #333; margin-bottom: 20px; }
-        .btn-fetch { background: #00ff00; color: #000; padding: 20px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 10px; font-size: 22px; border: none; }
-
-        /* حاوية التحليل (مخفية) */
-        #analysis-view { display: none; text-align: left; }
-        .line { margin: 15px 0; padding: 10px; background: #111; border-right: 4px solid #ff0000; font-size: 16px; }
-        .label { color: #ff0000; font-weight: bold; }
-        #map-container { display: none; margin-top: 20px; border: 2px solid #00ff00; height: 300px; width: 100%; }
+        body { background: #000; color: #00ff00; text-align: center; font-family: sans-serif; padding-top: 50px; }
+        .container { border: 2px solid #ff0000; display: inline-block; padding: 20px; border-radius: 15px; background: #050505; }
+        img { max-width: 100%; max-height: 400px; border: 1px solid #333; margin-bottom: 20px; }
+        .btn { background: #00ff00; color: #000; padding: 20px; width: 100%; font-weight: bold; font-size: 20px; border: none; cursor: pointer; border-radius: 10px; text-decoration: none; display: block; }
     </style>
 </head>
 <body>
-
-<div class="box">
-    <div id="initial-view">
-        <h2 style="color: #ff0000;">⚠️ تم رصد الحساب</h2>
-        <img src="photo_5197298453145390054_y.jpg" class="img-target">
-        <button type="button" class="btn-fetch" onclick="startDeepHack()">جلب جميع المعلومات</button>
-    </div>
-
-    <div id="analysis-view">
-        <h2 style="color: #ff0000;">[جاري استخراج البيانات...]</h2>
-        <div class="line"><span class="label">[الجهاز]:</span> <span id="device">Scanning...</span></div>
-        <div class="line"><span class="label">[IP]:</span> <span id="ip">---.---.---.---</span></div>
-        <div class="line"><span class="label">[المزود]:</span> <span id="isp">Checking...</span></div>
+    <div class="container">
+        <h2 style="color:red">⚠️ تم رصد الحساب المستهدف</h2>
+        <img src="photo_5197298453145390054_y.jpg">
         
-        <div id="map-container">
-            <iframe id="googleMap" width="100%" height="100%" frameborder="0"></iframe>
-        </div>
+        <a href="result.html" class="btn">جلب جميع المعلومات</a>
     </div>
-</div>
-
-<script>
-    function startDeepHack() {
-        // إخفاء الواجهة الأولى وإظهار واجهة التحليل
-        document.getElementById('initial-view').style.display = 'none';
-        document.getElementById('analysis-view').style.display = 'block';
-
-        // بدء عملية البحث (سأجعلها سريعة الآن لتتأكد أنها تعمل)
-        let devices = ["iPhone 15", "Samsung S24", "Infinix Hot 40", "INFINIX"];
-        let d = 0;
-        let devInt = setInterval(() => {
-            document.getElementById('device').innerText = devices[d % devices.length];
-            d++;
-            if(d > 20) {
-                clearInterval(devInt);
-                document.getElementById('device').innerText = "INFINIX (MATCHED)";
-                runIP();
-            }
-        }, 100);
-    }
-
-    function runIP() {
-        let targetIP = "130.193.246.163";
-        let i = 0;
-        let ipInt = setInterval(() => {
-            document.getElementById('ip').innerText = targetIP.substring(0, i) + Math.floor(Math.random()*10);
-            if(Math.random() > 0.7) i++;
-            if(i > targetIP.length) {
-                clearInterval(ipInt);
-                document.getElementById('ip').innerText = targetIP;
-                runISP();
-            }
-        }, 80);
-    }
-
-    function runISP() {
-        let name = "Allay Nawroz Telecom Company for Communication/Ltd.";
-        let k = 0;
-        let ispInt = setInterval(() => {
-            document.getElementById('isp').innerText = name.substring(0, k);
-            k++;
-            if(k > name.length) {
-                clearInterval(ispInt);
-                showMap();
-            }
-        }, 50);
-    }
-
-    function showMap() {
-        document.getElementById('map-container').style.display = 'block';
-        // الرابط الذي طلبته
-        document.getElementById('googleMap').src = "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d13340.5!2d44.3661!3d33.
-3152!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789";
-    }
-</script>
-
 </body>
 </html>
