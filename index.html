@@ -2,112 +2,101 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Access</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Changa:wght@500&display=swap" rel="stylesheet">
+    
     <style>
         body {
-            background-color: #050505;
-            color: #e0e0e0;
-            font-family: 'Tajawal', sans-serif; /* الخط العربي المرتب */
+            background-color: #0a0a0a;
+            /* استعملنا خط Cairo لأنه يدعم المتصفحات القديمة والجديدة بوضوح عالي */
+            font-family: 'Cairo', sans-serif; 
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            position: relative;
+            color: #ffffff;
         }
 
-        /* خلفية خفيفة تعطي شكل تقني */
-        body::before {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, #1a1a1a 1px, transparent 1px);
-            background-size: 30px 30px;
-            opacity: 0.2;
-            z-index: -1;
-        }
-
-        .content {
-            background: rgba(15, 15, 15, 0.95);
+        .login-card {
+            background: #141414;
             padding: 40px;
-            border-radius: 12px;
-            border: 1px solid #333;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 15px;
+            border: 1px solid #222;
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
             text-align: center;
-            width: 350px;
+            width: 100%;
+            max-width: 380px;
         }
 
         h1 {
+            font-family: 'Changa', sans-serif; /* خط أعرض وأفخم للعناوين */
             font-weight: 700;
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 10px;
-            color: #fff;
+            color: #007bff;
         }
 
         p {
-            font-size: 14px;
-            color: #888;
-            margin-bottom: 25px;
+            font-size: 15px;
+            color: #aaa;
+            margin-bottom: 30px;
         }
 
         input[type="password"] {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            border: 1px solid #444;
-            background: #111;
-            color: #fff;
-            font-family: 'JetBrains Mono', monospace; /* خط الأرقام المرتب */
-            font-size: 18px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            background: #050505;
+            color: #00ff00; /* لون الرمز أخضر للتمويه */
+            font-size: 22px;
             text-align: center;
+            letter-spacing: 5px; /* تباعد النجوم لجمالية أكثر */
             box-sizing: border-box;
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background-color: #007bff; /* أزرق احترافي */
+            padding: 14px;
+            background: linear-gradient(45deg, #007bff, #0056b3);
             color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
             cursor: pointer;
-            transition: 0.3s;
+            font-family: 'Cairo', sans-serif;
         }
 
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .error-message {
-            color: #ff4d4d;
-            font-size: 13px;
-            margin-top: 10px;
+        .error {
+            color: #ff3333;
+            margin-top: 15px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<div class="content">
+<div class="login-card">
     <h1>مرحباً بك أستاذ علي</h1>
-    <p>يرجى إدخال رمز التحقق للدخول</p>
-    <input type="password" id="passwordInput" placeholder="••••••••">
-    <button onclick="checkPassword()">دخول النظام</button>
-    <div id="errorMessage" class="error-message"></div>
+    <p>النظام يتطلب رمز الوصول للمتابعة</p>
+    <input type="password" id="pass" placeholder="••••••••">
+    <button onclick="login()">دخول النظام</button>
+    <div id="msg" class="error"></div>
 </div>
 
 <script>
-    const correctPassword = "05195688";
-    function checkPassword() {
-        const enteredPassword = document.getElementById('passwordInput').value;
-        if (enteredPassword === correctPassword) {
+    function login() {
+        const p = document.getElementById('pass').value;
+        if (p === "05195688") {
             window.location.href = "control_panel.html";
         } else {
-            document.getElementById('errorMessage').innerText = "الرمز غير صحيح، حاول مجدداً";
+            document.getElementById('msg').innerText = "الرمز غير صحيح.. تم تسجيل المحاولة";
         }
     }
 </script>
