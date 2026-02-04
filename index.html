@@ -2,99 +2,61 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Control Panel - Secure Access</title>
+    <title>نظام الاختراق العالمي - تسجيل الدخول</title>
     <style>
-        body {
-            background-color: #000;
-            color: #00ff00;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
+        #canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+        .login-box {
+            position: relative; z-index: 10; display: flex; justify-content: center; align-items: center; height: 100vh;
         }
-
-        .panel {
-            background: rgba(10, 10, 10, 0.95);
-            border: 2px solid #00ff00;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 0 20px #00ff00;
-            width: 400px;
-            position: relative;
+        .form {
+            background: rgba(0, 0, 0, 0.9); border: 2px solid #00ff00; padding: 40px; border-radius: 15px;
+            text-align: center; box-shadow: 0 0 20px #00ff00; width: 350px;
         }
-
-        /* زر تسجيل الخروج */
-        .logout-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #444;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-size: 12px;
-            border-radius: 5px;
+        h1 { color: #00ff00; font-size: 22px; margin-bottom: 20px; text-shadow: 0 0 5px #00ff00; }
+        input {
+            width: 100%; padding: 12px; background: #000; border: 1px solid #00ff00; color: #00ff00;
+            font-size: 20px; text-align: center; margin-bottom: 20px; outline: none; box-sizing: border-box;
         }
-
-        h1 { font-size: 24px; color: #ff0000; text-shadow: 0 0 10px #ff0000; }
-
-        .fb-image {
-            width: 200px;
-            height: 200px;
-            border: 1px solid #00ff00;
-            margin: 20px 0;
-            background: #111; /* مكان الصورة إذا ما حطيت رابط */
+        button {
+            width: 100%; padding: 12px; background: #00ff00; color: #000; font-weight: bold;
+            border: none; cursor: pointer; font-size: 18px; border-radius: 5px;
         }
-
-        .fetch-btn {
-            background: #00ff00;
-            color: #000;
-            border: none;
-            padding: 15px;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        #loading-screen { display: none; margin-top: 20px; font-family: monospace; }
+        .err { color: #ff0000; margin-top: 10px; font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
-
-    <div class="panel">
-        <button class="logout-btn" onclick="location.href='index.html'">تسجيل الخروج ✖</button>
-        
-        <h1>⚠️ تم اختراق قاعدة بيانات فيسبوك</h1>
-        <p style="color: #aaa;">الحالة: الاتصال مستقر (Encrypted)</p>
-
-        <img src="رابط_صورتك" alt="Facebook Data" class="fb-image">
-
-        <button class="fetch-btn" onclick="start()">جلب جميع المعلومات</button>
-
-        <div id="loading-screen">
-            <p>جارٍ سحب الصور... <span id="proc">0%</span></p>
+    <canvas id="canvas"></canvas>
+    <div class="login-box">
+        <div class="form">
+            <h1>نظام فك التشفير المركزي</h1>
+            <input type="password" id="p" placeholder="ادخل الرمز السري">
+            <button onclick="go()">دخول</button>
+            <div id="e" class="err"></div>
         </div>
     </div>
-
     <script>
-        function start() {
-            document.querySelector('.fetch-btn').style.display = 'none';
-            document.getElementById('loading-screen').style.display = 'block';
-            let p = 0;
-            let i = setInterval(() => {
-                p += 2;
-                document.getElementById('proc').innerText = p + "%";
-                if(p >= 100) {
-                    clearInterval(i);
-                    alert('تم سحب كافة البيانات بنجاح إلى السيرفر الرئيسي');
-                }
-            }, 100);
+        const c = document.getElementById('canvas'); const ctx = c.getContext('2d');
+        c.width = window.innerWidth; c.height = window.innerHeight;
+        const txt = "010101010101010101010101010101"; const f = 16; const cols = c.width / f;
+        const d = []; for (let i = 0; i < cols; i++) d[i] = 1;
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, c.width, c.height);
+            ctx.fillStyle = "#00ff00"; ctx.font = f + "px monospace";
+            for (let i = 0; i < d.length; i++) {
+                const s = txt.charAt(Math.floor(Math.random() * txt.length));
+                ctx.fillText(s, i * f, d[i] * f);
+                if (d[i] * f > c.height && Math.random() > 0.975) d[i] = 0;
+                d[i]++;
+            }
+        }
+        setInterval(draw, 35);
+        function go() {
+            if(document.getElementById('p').value === "05195688") {
+                window.location.href = "control_panel.html";
+            } else {
+                document.getElementById('e').innerText = "تم رصد محاولة اختراق.. تم التبليغ!";
+            }
         }
     </script>
 </body>
