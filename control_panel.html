@@ -3,68 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Deep Scan</title>
+    <title>Control Panel - Secure Access</title>
     <style>
-        body { background: #000; color: #00ff00; font-family: 'Courier New', Courier, monospace; text-align: center; margin: 0; padding: 15px; overflow-x: hidden; }
-        .box { background: rgba(5, 5, 5, 0.95); border: 2px solid #ff0000; padding: 20px; border-radius: 10px; display: inline-block; width: 95%; max-width: 550px; box-shadow: 0 0 40px #ff0000; margin-top: 10px; }
-        .img-target { width: 100%; max-height: 250px; object-fit: contain; border: 1px solid #333; margin-bottom: 15px; }
-        .data-line { text-align: left; font-size: 16px; margin: 15px 0; padding: 8px; background: #050505; border-left: 3px solid #ff0000; }
-        .label { color: #ff0000; font-weight: bold; margin-right: 5px; }
-        #timer { font-size: 24px; color: #fff; margin: 10px 0; text-shadow: 0 0 10px #ff0000; }
+        body { background: #000; color: #00ff00; font-family: monospace; text-align: center; margin: 0; padding: 20px; }
+        .box { background: rgba(10,10,10,0.95); border: 2px solid #ff0000; padding: 25px; border-radius: 15px; display: inline-block; width: 95%; max-width: 500px; box-shadow: 0 0 30px #ff0000; }
+        .img-target { width: 100%; max-height: 350px; object-fit: contain; border: 1px solid #333; margin-bottom: 20px; }
+        
+        /* قسم البيانات المخفي في البداية */
+        #analysis-section { display: none; text-align: left; margin-top: 20px; border-top: 1px solid #333; padding-top: 15px; }
+        .data-line { font-size: 16px; margin: 15px 0; padding: 10px; background: #050505; border-right: 3px solid #ff0000; }
+        .label { color: #ff0000; font-weight: bold; margin-left: 5px; }
+        
+        .btn-fetch { background: #00ff00; color: #000; padding: 18px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 8px; font-size: 20px; border: none; }
+        
         #map-container { display: none; margin-top: 20px; border: 2px solid #00ff00; height: 300px; width: 100%; }
-        .btn-start { background: #ff0000; color: #fff; padding: 20px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 22px; border: none; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        .loading-bar { width: 0%; height: 5px; background: #00ff00; margin-top: 5px; transition: width 0.5s; }
+        .loader { color: #fff; font-size: 14px; margin-top: 5px; display: block; }
     </style>
 </head>
 <body>
 
 <div class="box">
-    <h2 style="color: #ff0000;">[مركز التعقب والتحليل العالمي]</h2>
+    <h2 id="title">⚠️ تم رصد الحساب النشط</h2>
     
-    <div id="timer">الوقت المتبقي للتحليل: 30:00</div>
-
     <img src="https://raw.githubusercontent.com/jgdshsdfhbhdbcx248-droid/o7f46/main/photo_5197298453145390054_y.jpg" class="img-target">
 
-    <div id="display-area">
-        <div class="data-line"><span class="label">الجهاز:</span> <span id="device">بانتظار بدء الفحص...</span><div class="loading-bar" id="bar1"></div></div>
-        <div class="data-line"><span class="label">عنوان IP:</span> <span id="ip">---.---.---.---</span><div class="loading-bar" id="bar2"></div></div>
-        <div class="data-line"><span class="label">المزود:</span> <span id="isp">جاري تحديد الهوية...</span><div class="loading-bar" id="bar3"></div></div>
+    <button class="btn-fetch" id="mainBtn" onclick="startHacking()">جلب جميع المعلومات</button>
+
+    <div id="analysis-section">
+        <div class="data-line">
+            <span class="label">[جاري فحص نوع الجهاز]:</span> 
+            <span id="device">...</span>
+        </div>
+        <div class="data-line">
+            <span class="label">[تحديد عنوان IP]:</span> 
+            <span id="ip">...</span>
+        </div>
+        <div class="data-line">
+            <span class="label">[مزود الخدمة]:</span> 
+            <span id="isp">...</span>
+        </div>
+        <div id="final-msg" style="color:white; font-size: 12px; margin-top: 10px;"></div>
     </div>
 
-    <button class="btn-start" id="mainBtn" onclick="startDeepScan()">بدء عملية الاختراق والتعقب</button>
-
     <div id="map-container">
-        <h3 style="color: #00ff00;">تم تحديد الموقع المباشر:</h3>
+        <h3 style="color: #00ff00;">تم تحديد الموقع المباشر (GPS):</h3>
         <iframe id="googleMap" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen></iframe>
     </div>
 </div>
 
 <script>
     const finalIP = "130.193.246.163";
-    const devices = ["Apple iPhone 15 Pro", "Samsung S24 Ultra", "Google Pixel 8", "Huawei Mate 60", "Xiaomi 14 Pro", "INFINIX"];
+    const devices = ["iPhone 15", "Samsung S24", "Huawei P60", "Google Pixel", "INFINIX"];
     const ispName = "Allay Nawroz Telecom Company for Communication/Ltd.";
-    let totalSeconds = 1800; // 30 دقيقة بالثواني
 
-    function startDeepScan() {
+    function startHacking() {
+        // إخفاء الزر وإظهار قسم التحليل
         document.getElementById('mainBtn').style.display = 'none';
-        
-        // عداد الوقت (30 دقيقة)
-        let timerInterval = setInterval(() => {
-            let mins = Math.floor(totalSeconds / 60);
-            let secs = totalSeconds % 60;
-            document.getElementById('timer').innerText = الوقت المتبقي للتحليل: ${mins}:${secs < 10 ? '0' : ''}${secs};
-            if (totalSeconds <= 0) clearInterval(timerInterval);
-            totalSeconds--;
-        }, 1000);
+        document.getElementById('analysis-section').style.display = 'block';
+        document.getElementById('title').innerText = "جاري تنفيذ عملية الاختراق...";
 
-        // 1. مرحلة الأجهزة (تستغرق 10 دقائق)
+        // 1. مرحلة الأجهزة (تطول 10 دقائق تقريباً)
         let devCount = 0;
         let deviceLoop = setInterval(() => {
-            document.getElementById('device').innerText = devices[Math.floor(Math.random() * (devices.length - 1))];
-            document.getElementById('bar1').style.width = (devCount / 10) * 100 + "%";
+            document.getElementById('device').innerText = devices[Math.floor(Math.random() * devices.length)];
             devCount++;
-            if (devCount > 600) { // بعد 10 دقائق
+            
+            // بعد فترة طويلة يثبت على انفينكس
+            if (devCount > 100) { // غير هذا الرقم لزيادة الوقت (كل 100 تعادل تقريباً 10 ثواني للتجربة، زيدها لـ 6000 للنصف ساعة)
                 clearInterval(deviceLoop);
                 document.getElementById('device').innerText = "INFINIX (DETECTED)";
-                document.getElementById('device').style.
+                document.getElementById('device').style.color = "white";
+                startIPStep();
+            }
+        }, 150); 
+    }
+
+    function startIPStep() {
+        // 2. مرحلة الـ IP (تبدأ بعد الأجهزة)
+        let currentIdx = 0;
+        let ipLoop = setInterval(() => {
+            let randomDigit = Math.floor(Math.random() * 10);
+            document.getElementById('ip').innerText = finalIP.
