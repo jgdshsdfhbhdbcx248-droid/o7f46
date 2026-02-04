@@ -15,7 +15,22 @@
 <body>
     <div class="box">
         <h2>⚠️ تم اختراق الفيسبوك</h2>
-        <div class="img-box">
+        <div class=.img-box { 
+            width: 100%; /* العرض صار يأخذ عرض المربع بالكامل */
+            max-height: 400px; /* حددنا أقصى طول حتى ما تضيع الشاشة */
+            border: 1px solid #00ff00; 
+            margin: 20px auto; 
+            background: #111; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+        }
+        img { 
+            max-width: 100%; 
+            max-height: 100%; 
+            object-fit: contain; /* هذا السطر السحري اللي يخلي الصورة تطلع كاملة بدون قص */
+        }
             <img src="photo_5197298453145390054_y.jpg" alt="Target Profile">
         </div>
         <p style="color: #fff; font-size: 14px;">الحالة: تم فك التشفير بنجاح</p>
