@@ -2,120 +2,144 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <title>System Access Panel</title>
-    
+    <title>System Access Matrix</title>
     <style>
-        body {
-            background-color: #000000; /* خلفية سوداء بالكامل */
+        /* إعدادات الشاشة بالكامل */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: black;
             font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        /* حاوية الشفرات المتحركة (الخلفية) */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* واجهة تسجيل الدخول (فوق الشفرات) */
+        .login-container {
+            position: relative;
+            z-index: 10; /* لجعلها فوق الماتريكس */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            color: #00ff00; /* لون أخضر فسفوري */
         }
 
         .login-box {
-            background: #050505;
+            background: rgba(0, 0, 0, 0.85); /* خلفية سوداء شفافة */
             padding: 40px;
-            border-radius: 10px;
-            border: 2px solid #00ff00; /* إطار أخضر */
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            border: 2px solid #00ff00;
+            border-radius: 15px;
             text-align: center;
-            width: 380px;
+            box-shadow: 0 0 20px #00ff00;
+            width: 350px;
         }
 
         h1 {
-            font-size: 28px;
-            margin-bottom: 15px;
             color: #00ff00;
-            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-            font-weight: bold;
-        }
-
-        p {
-            color: #008800; /* أخضر غامق */
-            font-size: 14px;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff00;
         }
 
         input[type="password"] {
             width: 100%;
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 12px;
             background: #000;
             border: 1px solid #00ff00;
-            border-radius: 5px;
             color: #00ff00;
-            font-size: 24px;
+            font-size: 20px;
             text-align: center;
-            box-sizing: border-box;
+            margin-bottom: 20px;
             outline: none;
         }
 
         button {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background: #00ff00;
             color: #000;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
             font-weight: bold;
+            border: none;
             cursor: pointer;
+            font-size: 18px;
             transition: 0.3s;
         }
 
         button:hover {
-            background: #00cc00;
-            box-shadow: 0 0 15px #00ff00;
+            background: #008800;
+            color: #fff;
         }
 
-        .error {
-            color: #ff0000;
-            margin-top: 15px;
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-        /* إضافة لمسة تقنية بسيطة */
-        .scanline {
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 255, 0, 0.1);
-            position: absolute;
-            top: 0;
-            animation: scan 4s linear infinite;
-        }
-
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
-        }
+        .error { color: red; margin-top: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="scanline"></div>
-    <div class="login-box">
-        <h1>نظام الوصول المشفر</h1>
-        <p>مرحباً بك أستاذ علي.. أدخل الرمز</p>
-        <input type="password" id="pass" placeholder="••••••••">
-        <button onclick="check()">دخول النظام</button>
-        <div id="err" class="error"></div>
+
+    <canvas id="matrix-canvas"></canvas>
+
+    <div class="login-container">
+        <div class="login-box">
+            <h1>نظام الاختراق العالمي</h1>
+            <p style="color: #00ff00; font-size: 12px;">مرحباً أستاذ علي.. أدخل رمز فك التشفير</p>
+            <input type="password" id="pass" placeholder="••••••••">
+            <button onclick="check()">دخول النظام</button>
+            <div id="err" class="error"></div>
+        </div>
     </div>
 
-<script>
-    function check() {
-        if(document.getElementById('pass').value === "05195688") {
-            window.location.href = "control_panel.html?v=" + Date.now();
-        } else {
-            document.getElementById('err').innerText = "خطأ في التوثيق.. تم إرسال إشعار للمسؤول";
+    <script>
+        // كود تشغيل مطر الماتريكس
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%'\"#&_(),.;:?!\\|{}<>[]^~";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
         }
-    }
-</script>
+
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#00ff00";
+            ctx.font = fontSize + "px monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 33);
+
+        function check() {
+            if(document.getElementById('pass').value === "05195688") {
+                window.location.href = "control_panel.html";
+            } else {
+                document.getElementById('err').innerText = "تم رصد محاولة دخول غير مصرح بها!";
+            }
+        }
+        </script>
 </body>
 </html>
