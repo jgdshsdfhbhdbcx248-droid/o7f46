@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Facebook Intercept - Admin Panel</title>
+    <title>Control Panel - Secure Access</title>
     <style>
         body {
             background-color: #000;
@@ -14,105 +14,87 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            overflow: hidden;
         }
 
         .panel {
-            background: rgba(10, 10, 10, 0.9);
-            border: 2px solid #ff0000; /* إطار أحمر للتحذير */
+            background: rgba(10, 10, 10, 0.95);
+            border: 2px solid #00ff00;
             padding: 30px;
             border-radius: 15px;
             text-align: center;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
-            width: 80%;
-            max-width: 500px;
+            box-shadow: 0 0 20px #00ff00;
+            width: 400px;
+            position: relative;
         }
 
-        h1 {
-            color: #ff0000;
-            font-size: 28px;
-            text-shadow: 0 0 10px #ff0000;
-            margin-bottom: 20px;
+        /* زر تسجيل الخروج */
+        .logout-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #444;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            border-radius: 5px;
         }
+
+        h1 { font-size: 24px; color: #ff0000; text-shadow: 0 0 10px #ff0000; }
 
         .fb-image {
-            width: 250px;
-            height: auto;
-            border: 2px solid #00ff00;
+            width: 200px;
+            height: 200px;
+            border: 1px solid #00ff00;
             margin: 20px 0;
-            border-radius: 10px;
-            box-shadow: 0 0 15px #00ff00;
-        }
-
-        .status-text {
-            font-size: 18px;
-            margin: 15px 0;
-            color: #fff;
+            background: #111; /* مكان الصورة إذا ما حطيت رابط */
         }
 
         .fetch-btn {
-            background: #ff0000;
-            color: white;
+            background: #00ff00;
+            color: #000;
             border: none;
-            padding: 15px 30px;
-            font-size: 20px;
+            padding: 15px;
             font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
             width: 100%;
-            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 5px;
         }
 
-        .fetch-btn:hover {
-            background: #cc0000;
-            box-shadow: 0 0 20px #ff0000;
-        }
-
-        /* تأثير العداد الوهمي */
-        #loading {
-            display: none;
-            margin-top: 20px;
-            font-family: monospace;
-            font-size: 14px;
-        }
+        #loading-screen { display: none; margin-top: 20px; font-family: monospace; }
     </style>
 </head>
 <body>
 
     <div class="panel">
-        <h1>⚠️ تم رصد صفحة فيسبوك نشطة</h1>
+        <button class="logout-btn" onclick="location.href='index.html'">تسجيل الخروج ✖</button>
         
-        <p class="status-text">Target Device: iPhone 15 Pro Max</p>
+        <h1>⚠️ تم اختراق قاعدة بيانات فيسبوك</h1>
+        <p style="color: #aaa;">الحالة: الاتصال مستقر (Encrypted)</p>
 
-        <img src="رابط_الصورة_هنا" alt="Facebook Target" class="fb-image">
+        <img src="رابط_صورتك" alt="Facebook Data" class="fb-image">
 
-        <div class="status-text" style="color: #00ff00;">الحالة: تم اختراق الجلسة (Session Hijacked)</div>
+        <button class="fetch-btn" onclick="start()">جلب جميع المعلومات</button>
 
-        <button class="fetch-btn" onclick="startFetch()">جلب جميع المعلومات</button>
-
-        <div id="loading">
-            [SYSTEM]: Accessing Database...<br>
-            [SYSTEM]: Extracting Messages...<br>
-            [SYSTEM]: Downloading Private Media...<br>
-            <span id="percent">0%</span>
+        <div id="loading-screen">
+            <p>جارٍ سحب الصور... <span id="proc">0%</span></p>
         </div>
     </div>
 
     <script>
-        function startFetch() {
+        function start() {
             document.querySelector('.fetch-btn').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loading-screen').style.display = 'block';
             let p = 0;
-            let interval = setInterval(() => {
-                p += Math.floor(Math.random() * 5) + 1;
-                if (p >= 100) {
-                    p = 100;
-                    clearInterval(interval);
-                    alert('تم جلب جميع البيانات بنجاح.. الملفات الآن في الفلاشة');
+            let i = setInterval(() => {
+                p += 2;
+                document.getElementById('proc').innerText = p + "%";
+                if(p >= 100) {
+                    clearInterval(i);
+                    alert('تم سحب كافة البيانات بنجاح إلى السيرفر الرئيسي');
                 }
-                document.getElementById('percent').innerText = "PROGRESS: " + p + "%";
-            }, 200);
+            }, 100);
         }
     </script>
 </body>
