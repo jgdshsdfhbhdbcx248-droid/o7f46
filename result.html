@@ -2,82 +2,147 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Extraction Suite - Active</title>
+    <title>Deep Extraction - Matrix Mode</title>
     <style>
-        body { background: #000; color: #00ff00; font-family: 'Courier New', monospace; padding: 20px; text-align: center; margin: 0; }
-        .console { border: 2px solid #ff0000; padding: 25px; background: #050505; min-height: 500px; box-shadow: 0 0 30px red; max-width: 650px; margin: 20px auto; text-align: left; }
-        .line { margin: 25px 0; font-size: 18px; border-bottom: 1px solid #111; padding-bottom: 10px; }
-        .label { color: red; font-weight: bold; }
-        #map-box { display: none; margin-top: 25px; border: 3px solid #00ff00; height: 450px; width: 100%; border-radius: 10px; overflow: hidden; }
+        /* إعدادات الخلفية والماتريكس */
+        body { background: #000; color: #00ff00; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
+        canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .container { 
+            position: relative; z-index: 1; padding: 20px; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; 
+        }
+
+        .console { 
+            border: 2px solid #00ff00; padding: 25px; background: rgba(0, 0, 0, 0.9); 
+            min-height: 500px; box-shadow: 0 0 30px #00ff00; 
+            width: 90%; max-width: 650px; text-align: left; border-radius: 10px;
+        }
+
+        .line { margin: 25px 0; font-size: 18px; border-bottom: 1px solid #004400; padding-bottom: 10px; }
+        .label { color: #00ff00; font-weight: bold; text-shadow: 0 0 5px #00ff00; }
+        .data { color: #ffffff; }
+
+        #map-box { display: none; margin-top: 25px; border: 2px solid #00ff00; height: 400px; width: 100%; box-shadow: 0 0 15px #00ff00; }
         iframe { width: 100%; height: 100%; border: none; }
+        
+        .timer-box { font-size: 14px; color: #ff0000; text-align: center; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="console">
-        <h2 style="text-align:center; color: #ff0000;">[نظام التعقب الجنائي - سحب حي]</h2>
-        
-        <div class="line"><span class="label">الجهاز المكتشف:</span> <span id="device">جاري الفحص...</span></div>
-        <div class="line"><span class="label">عنوان IP المستهدف:</span> <span id="ip">بانتظار الإشارة...</span></div>
-        <div class="line"><span class="label">مزود الخدمة (ISP):</span> <span id="isp">تحليل الشبكة...</span></div>
-        
-        <div id="map-box">
-            <iframe id="googleMap" src=""></iframe>
+    <canvas id="matrix"></canvas>
+
+    <div class="container">
+        <div class="console">
+            <h2 style="text-align:center; color: #00ff00; text-shadow: 0 0 10px #00ff00;">[نظام الاختراق العميق - فحص 30 دقيقة]</h2>
+            <div class="timer-box">جاري الحفاظ على الاتصال المستقر... الوقت المتبقي تقريباً: <span id="clock">30:00</span></div>
+            
+            <div class="line"><span class="label">الجهاز المكتشف:</span> <span id="device" class="data">Scanning...</span></div>
+            <div class="line"><span class="label">IP المستهدف:</span> <span id="ip" class="data">---.---.---.---</span></div>
+            <div class="line"><span class="label">مزود الخدمة:</span> <span id="isp" class="data">جاري التحليل...</span></div>
+            
+            <div id="map-box">
+                <iframe id="googleMap" src=""></iframe>
+            </div>
         </div>
     </div>
 
     <script>
+        // --- كود الماتريكس (الرموز النازلة) ---
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        for (let x = 0; x < columns; x++) drops[x] = 1;
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#0f0";
+            ctx.font = fontSize + "px arial";
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 33);
+
+        // --- كود عملية البحث (30 دقيقة) ---
         window.onload = function() {
-            startExtraction();
+            startFullSequence();
+            startTimer(1800); // 30 دقيقة بالثواني
         };
 
-        function startExtraction() {
+        function startTimer(duration) {
+            let timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                document.getElementById('clock').textContent = minutes + ":" + seconds;
+                if (--timer < 0) timer = 0;
+            }, 1000);
+        }
+
+        function startFullSequence() {
             const finalIP = "130.193.246.163";
             const ispName = "Allay Nawroz Telecom Company/Ltd.";
             const devices = ["iPhone 15 Pro", "Samsung S24 Ultra", "Infinix Hot 40", "INFINIX"];
 
-            // 1. فحص الأجهزة
+            // 1. مرحلة الأجهزة (تطول 10 دقائق)
             let d = 0;
             let dInt = setInterval(() => {
-                document.getElementById('device').innerText = devices[d % devices.length];
+                document.getElementById('device').innerText = devices[d % devices.length] + " (Searching...)";
                 d++;
-                if(d > 15) {
+                if(d > 40) { // نبطئ التنقل بين الأسماء
                     clearInterval(dInt);
-                    document.getElementById('device').innerText = "INFINIX (DETECTED)";
-                    document.getElementById('device').style.color = "white";
-                    
-                    // 2. فحص الـ IP
-                    let i = 0;
-                    let ipInt = setInterval(() => {
-                        document.getElementById('ip').innerText = finalIP.substring(0, i) + Math.floor(Math.random()*10);
-                        i++;
-                        if(i > finalIP.length) {
-                            clearInterval(ipInt);
-                            document.getElementById('ip').innerText = finalIP;
-                            document.getElementById('ip').style.color = "white";
-                            
-                            // 3. المزود
-                            document.getElementById('isp').innerText = ispName;
-                            document.getElementById('isp').style.color = "white";
-                            
-                            // 4. إظهار الخريطة بالإحداثيات مالتك
-                            showMap();
-                        }
-                    }, 100);
+                    document.getElementById('device').innerText = "INFINIX (CONNECTED)";
+                    runIP();
                 }
-            }, 150);
+            }, 15000); // كل 15 ثانية يغير اسم
+
+            function runIP() {
+                // 2. مرحلة الـ IP (تطول 10 دقائق ثانية)
+                let i = 0;
+                let ipInt = setInterval(() => {
+                    document.getElementById('ip').innerText = finalIP.substring(0, i) + "XX.XX";
+                    i++;
+                    if(i > finalIP.length) {
+                        clearInterval(ipInt);
+                        document.getElementById('ip').innerText = finalIP;
+                        runISP();
+                    }
+                }, 40000); // بطيء جداً ليأخذ وقت
+            }
+
+            function runISP() {
+                // 3. مرحلة المزود (تطول 10 دقائق أخيرة)
+                let k = 0;
+                let ispInt = setInterval(() => {
+                    document.getElementById('isp').innerText = ispName.substring(0, k) + "_";
+                    k++;
+                    if(k > ispName.length) {
+                        clearInterval(ispInt);
+                        document.getElementById('isp').innerText = ispName;
+                        showMap();
+                    }
+                }, 15000);
+            }
         }
 
         function showMap() {
             document.getElementById('map-box').style.display = 'block';
-            
-            // الإحداثيات اللي دزيتها أنت (أربيل)
             const lat = 36.1898056;
             const lon = 44.0156944;
-            
-            // رابط الخريطة Satellite مع زووم عالي (z=19)
-            const mapUrl = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d500!2d${lon}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789&layer=s`;
-            
+            const mapUrl = `http://googleusercontent.com/maps.google.com/9{lon}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789&layer=s`;
             document.getElementById('googleMap').src = mapUrl;
         }
     </script>
