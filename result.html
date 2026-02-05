@@ -2,31 +2,25 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Deep Extraction - Matrix Mode</title>
+    <title>System Diagnostic - Active</title>
     <style>
-        /* إعدادات الخلفية والماتريكس */
-        body { background: #000; color: #00ff00; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
+        body { background: #000; color: #00ff00; font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; }
         canvas { position: fixed; top: 0; left: 0; z-index: -1; }
-
-        .container { 
-            position: relative; z-index: 1; padding: 20px; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; 
-        }
-
-        .console { 
-            border: 2px solid #00ff00; padding: 25px; background: rgba(0, 0, 0, 0.9); 
-            min-height: 500px; box-shadow: 0 0 30px #00ff00; 
-            width: 90%; max-width: 650px; text-align: left; border-radius: 10px;
-        }
-
-        .line { margin: 25px 0; font-size: 18px; border-bottom: 1px solid #004400; padding-bottom: 10px; }
+        .container { position: relative; z-index: 1; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+        .console { border: 2px solid #00ff00; padding: 25px; background: rgba(0, 0, 0, 0.9); min-height: 400px; box-shadow: 0 0 30px #00ff00; width: 90%; max-width: 650px; text-align: left; border-radius: 10px; }
+        .line { margin: 15px 0; font-size: 18px; border-bottom: 1px solid #004400; padding-bottom: 10px; }
         .label { color: #00ff00; font-weight: bold; text-shadow: 0 0 5px #00ff00; }
         .data { color: #ffffff; }
-
-        #map-box { display: none; margin-top: 25px; border: 2px solid #00ff00; height: 400px; width: 100%; box-shadow: 0 0 15px #00ff00; }
+        #map-box { display: none; margin-top: 20px; border: 2px solid #00ff00; height: 350px; width: 100%; box-shadow: 0 0 15px #00ff00; }
         iframe { width: 100%; height: 100%; border: none; }
         
-        .timer-box { font-size: 14px; color: #ff0000; text-align: center; margin-bottom: 10px; }
+        /* التحذيرات */
+        #warning-box { display: none; margin-top: 20px; background: #4a0000; border: 2px solid #ff0000; color: #fff; padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; animation: blinker 1s linear infinite; font-weight: bold; }
+        @keyframes blinker { 50% { opacity: 0.3; } }
+        
+        #final-alert { display: none; background: #000; border: 3px solid #ff0000; color: #ff0000; padding: 20px; margin-top: 20px; border-radius: 10px; text-align: center; box-shadow: 0 0 20px red; }
+        .btn-delete { background: #ff0000; color: #fff; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; margin-top: 15px; border-radius: 5px; font-size: 16px; }
+        .btn-delete:hover { background: #b30000; }
     </style>
 </head>
 <body>
@@ -35,36 +29,41 @@
 
     <div class="container">
         <div class="console">
-            <h2 style="text-align:center; color: #00ff00; text-shadow: 0 0 10px #00ff00;">[نظام الاختراق العميق - فحص 30 دقيقة]</h2>
-            <div class="timer-box">جاري الحفاظ على الاتصال المستقر... الوقت المتبقي تقريباً: <span id="clock">30:00</span></div>
+            <h2 style="text-align:center; color: #00ff00; text-shadow: 0 0 10px #00ff00;">[نظام الفحص التشخيصي المباشر]</h2>
             
-            <div class="line"><span class="label">الجهاز المكتشف:</span> <span id="device" class="data">Scanning...</span></div>
-            <div class="line"><span class="label">IP المستهدف:</span> <span id="ip" class="data">---.---.---.---</span></div>
-            <div class="line"><span class="label">مزود الخدمة:</span> <span id="isp" class="data">جاري التحليل...</span></div>
+            <div class="line"><span class="label">الجهاز:</span> <span id="device" class="data">جاري التعريف...</span></div>
+            <div class="line"><span class="label">الـ IP:</span> <span id="ip" class="data">...</span></div>
+            <div class="line"><span class="label">المزود:</span> <span id="isp" class="data">...</span></div>
             
             <div id="map-box">
                 <iframe id="googleMap" src=""></iframe>
+            </div>
+
+            <div id="warning-box" onclick="showFinalAlert()">
+                ⚠️ تحذير: تم العثور على 4 ملفات داخل جهازك تقوم بتسريب معلومات (إضغط هنا للفحص)
+            </div>
+
+            <div id="final-alert">
+                <h3 style="margin-top:0;">🛑 اختراق أمني مكتشف!</h3>
+                <p>تم العثور على 4 مستندات داخل هاتفك تقوم بإرسال جميع بياناتك وجميع صورك وجميع جهات اتصالك وجميع الرسائل إلى مصدر مجهول.</p>
+                <hr style="border-color: #ff0000;">
+                <p style="color: white;">هل تريد العثور على هذه الملفات وحذفها؟</p>
+                <button class="btn-delete" onclick="alert('خطأ: لا يمكن الحذف، تم تشفير الملفات بواسطة المصدر المجهول!')">نعم، ابدأ الحذف الفوري</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- كود الماتريكس (الرموز النازلة) ---
+        // Matrix Background
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%";
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
-        const drops = [];
-        for (let x = 0; x < columns; x++) drops[x] = 1;
-
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const letters = "0101010101010101";
+        const fontSize = 16; const columns = canvas.width / fontSize;
+        const drops = []; for (let x = 0; x < columns; x++) drops[x] = 1;
         function drawMatrix() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#0f0";
-            ctx.font = fontSize + "px arial";
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#0f0"; ctx.font = fontSize + "px arial";
             for (let i = 0; i < drops.length; i++) {
                 const text = letters.charAt(Math.floor(Math.random() * letters.length));
                 ctx.fillText(text, i * fontSize, drops[i] * fontSize);
@@ -74,76 +73,29 @@
         }
         setInterval(drawMatrix, 33);
 
-        // --- كود عملية البحث (30 دقيقة) ---
+        // Fast Sequence for Testing
         window.onload = function() {
-            startFullSequence();
-            startTimer(1800); // 30 دقيقة بالثواني
+            setTimeout(() => {
+                document.getElementById('device').innerText = "INFINIX (DETECTED)";
+                document.getElementById('ip').innerText = "130.193.246.163";
+                document.getElementById('isp').innerText = "Allay Nawroz Telecom Company/Ltd.";
+                showMap();
+            }, 2000); // يظهر كل شيء بعد ثانيتين فقط للفحص
         };
-
-        function startTimer(duration) {
-            let timer = duration, minutes, seconds;
-            setInterval(function () {
-                minutes = parseInt(timer / 60, 10);
-                seconds = parseInt(timer % 60, 10);
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-                document.getElementById('clock').textContent = minutes + ":" + seconds;
-                if (--timer < 0) timer = 0;
-            }, 1000);
-        }
-
-        function startFullSequence() {
-            const finalIP = "130.193.246.163";
-            const ispName = "Allay Nawroz Telecom Company/Ltd.";
-            const devices = ["iPhone 15 Pro", "Samsung S24 Ultra", "Infinix Hot 40", "INFINIX"];
-
-            // 1. مرحلة الأجهزة (تطول 10 دقائق)
-            let d = 0;
-            let dInt = setInterval(() => {
-                document.getElementById('device').innerText = devices[d % devices.length] + " (Searching...)";
-                d++;
-                if(d > 40) { // نبطئ التنقل بين الأسماء
-                    clearInterval(dInt);
-                    document.getElementById('device').innerText = "INFINIX (CONNECTED)";
-                    runIP();
-                }
-            }, 15000); // كل 15 ثانية يغير اسم
-
-            function runIP() {
-                // 2. مرحلة الـ IP (تطول 10 دقائق ثانية)
-                let i = 0;
-                let ipInt = setInterval(() => {
-                    document.getElementById('ip').innerText = finalIP.substring(0, i) + "XX.XX";
-                    i++;
-                    if(i > finalIP.length) {
-                        clearInterval(ipInt);
-                        document.getElementById('ip').innerText = finalIP;
-                        runISP();
-                    }
-                }, 40000); // بطيء جداً ليأخذ وقت
-            }
-
-            function runISP() {
-                // 3. مرحلة المزود (تطول 10 دقائق أخيرة)
-                let k = 0;
-                let ispInt = setInterval(() => {
-                    document.getElementById('isp').innerText = ispName.substring(0, k) + "_";
-                    k++;
-                    if(k > ispName.length) {
-                        clearInterval(ispInt);
-                        document.getElementById('isp').innerText = ispName;
-                        showMap();
-                    }
-                }, 15000);
-            }
-        }
 
         function showMap() {
             document.getElementById('map-box').style.display = 'block';
-            const lat = 36.1898056;
-            const lon = 44.0156944;
-            const mapUrl = `http://googleusercontent.com/maps.google.com/9{lon}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789&layer=s`;
-            document.getElementById('googleMap').src = mapUrl;
+            const lat = 36.1898056; const lon = 44.0156944;
+            document.getElementById('googleMap').src = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000!2d${lon}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789&layer=s`;
+            
+            setTimeout(() => {
+                document.getElementById('warning-box').style.display = 'block';
+            }, 1500);
+        }
+
+        function showFinalAlert() {
+            document.getElementById('warning-box').style.display = 'none';
+            document.getElementById('final-alert').style.display = 'block';
         }
     </script>
 </body>
