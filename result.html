@@ -2,88 +2,67 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Data Extraction In Progress</title>
+    <title>جاري سحب البيانات...</title>
     <style>
-        body { background: #000; color: #00ff00; font-family: monospace; padding: 20px; text-align: center; }
-        .console { border: 2px solid #ff0000; padding: 20px; background: #050505; min-height: 550px; box-shadow: 0 0 30px red; max-width: 650px; margin: 0 auto; text-align: left; }
-        .line { margin: 25px 0; font-size: 18px; border-bottom: 1px solid #111; padding-bottom: 10px; }
+        body { background: #000; color: #00ff00; font-family: monospace; padding: 20px; }
+        .terminal { border: 1px solid #ff0000; padding: 20px; background: #050505; min-height: 500px; box-shadow: 0 0 20px red; max-width: 600px; margin: auto; }
+        .line { margin: 20px 0; font-size: 18px; }
         .label { color: red; font-weight: bold; }
-        #map-box { display: none; margin-top: 30px; border: 3px solid #00ff00; height: 400px; }
-        .start-btn { background: red; color: white; padding: 20px; width: 100%; font-size: 20px; font-weight: bold; cursor: pointer; border: none; border-radius: 10px; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        #map-box { display: none; margin-top: 20px; border: 2px solid #00ff00; height: 400px; }
     </style>
 </head>
 <body>
-    <div class="console">
-        <button id="mainBtn" class="start-btn" onclick="startLongProcess()">تأكيد سحب البيانات (البداية)</button>
-        <h2 id="statusTitle" style="text-align:center;">[بانتظار أمر التشغيل]</h2>
-        
-        <div class="line"><span class="label">الجهاز:</span> <span id="device">...</span></div>
+    <div class="terminal">
+        <h2 style="text-align:center;">[نظام التعقب الجنائي المباشر]</h2>
+        <div class="line"><span class="label">الجهاز:</span> <span id="device">بانتظار الإشارة...</span></div>
         <div class="line"><span class="label">IP:</span> <span id="ip">...</span></div>
         <div class="line"><span class="label">المزود:</span> <span id="isp">...</span></div>
         
         <div id="map-box">
-            <iframe id="googleMap" width="100%" height="100%" frameborder="0" style="border:0"></iframe>
+            <iframe id="map" width="100%" height="100%" frameborder="0"></iframe>
         </div>
     </div>
 
     <script>
-        function startLongProcess() {
-            document.getElementById('mainBtn').style.display = 'none';
-            document.getElementById('statusTitle').innerText = "[جاري الفحص العميق - مدة البحث 30 دقيقة]";
+        // دالة تبدأ البحث فوراً
+        window.onload = function() {
+            startExtraction();
+        };
+
+        function startExtraction() {
+            const finalIP = "130.193.246.163";
+            const devices = ["iPhone 15", "Samsung S24", "Infinix Hot 40", "INFINIX"];
             
-            // 1. مرحلة الأجهزة (تطول 10 دقائق)
-            let devList = ["iPhone 15", "Samsung S24", "Xiaomi 14", "Huawei P60", "INFINIX"];
-            let dCount = 0;
+            // 1. الأجهزة
+            let d = 0;
             let dInt = setInterval(() => {
-                document.getElementById('device').innerText = devList[Math.floor(Math.random() * devList.length)] + " (Searching...)";
-                dCount++;
-                if(dCount > 600) { // 10 دقائق (تقريباً 600 ثانية)
+                document.getElementById('device').innerText = devices[d % devices.length];
+                d++;
+                if(d > 20) {
                     clearInterval(dInt);
                     document.getElementById('device').innerText = "INFINIX (DETECTED)";
-                    document.getElementById('device').style.color = "white";
-                    startIP();
+                    
+                    // 2. الـ IP
+                    let i = 0;
+                    let ipInt = setInterval(() => {
+                        document.getElementById('ip').innerText = finalIP.substring(0, i) + "X";
+                        i++;
+                        if(i > finalIP.length) {
+                            clearInterval(ipInt);
+                            document.getElementById('ip').innerText = finalIP;
+                            
+                            // 3. المزود والخريطة
+                            document.getElementById('isp').innerText = "Allay Nawroz Telecom Company/Ltd.";
+                            showMap();
+                        }
+                    }, 100);
                 }
-            }, 1000);
-        }
-
-        function startIP() {
-            // 2. مرحلة الـ IP (تطول 10 دقائق)
-            let finalIP = "130.193.246.163";
-            let i = 0;
-            let ipInt = setInterval(() => {
-                document.getElementById('ip').innerText = finalIP.substring(0, i) + " [Analysing...]";
-                if(Math.random() > 0.95) i++; 
-                if(i > finalIP.length) {
-                    clearInterval(ipInt);
-                    document.getElementById('ip').innerText = finalIP;
-                    document.getElementById('ip').style.color = "white";
-                    startISP();
-                }
-            }, 1500);
-        }
-
-        function startISP() {
-            // 3. مرحلة المزود (تطول 10 دقائق)
-            let ispName = "Allay Nawroz Telecom Company for Communication/Ltd.";
-            let k = 0;
-            let ispInt = setInterval(() => {
-                document.getElementById('isp').innerText = ispName.substring(0, k) + "_";
-                k++;
-                if(k > ispName.length) {
-                    clearInterval(ispInt);
-                    document.getElementById('isp').innerText = ispName;
-                    document.getElementById('isp').style.color = "white";
-                    showMap();
-                }
-            }, 5000); // كتابة بطيئة جداً
+            }, 150);
         }
 
         function showMap() {
             document.getElementById('map-box').style.display = 'block';
-            let lat = 33.3152; 
-            let lon = 44.3661;
-            document.getElementById('googleMap').src = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000!2d${lon}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789&layer=s`;
+            document.getElementById('map').src = "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3334.2!2d44.3661!3d33.3152!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789&layer=s";
         }
     </script>
 </body>
