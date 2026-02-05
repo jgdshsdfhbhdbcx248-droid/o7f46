@@ -1,61 +1,54 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>نظام الاختراق العالمي - تسجيل الدخول</title>
+    <title>TERMINAL ACCESS - PRIVATE</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
-        #canvas { position: absolute; top: 0; left: 0; z-index: 1; }
-        .login-box {
-            position: relative; z-index: 10; display: flex; justify-content: center; align-items: center; height: 100vh;
-        }
-        .form {
-            background: rgba(0, 0, 0, 0.9); border: 2px solid #00ff00; padding: 40px; border-radius: 15px;
-            text-align: center; box-shadow: 0 0 20px #00ff00; width: 350px;
-        }
-        h1 { color: #00ff00; font-size: 22px; margin-bottom: 20px; text-shadow: 0 0 5px #00ff00; }
-        input {
-            width: 100%; padding: 12px; background: #000; border: 1px solid #00ff00; color: #00ff00;
-            font-size: 20px; text-align: center; margin-bottom: 20px; outline: none; box-sizing: border-box;
-        }
-        button {
-            width: 100%; padding: 12px; background: #00ff00; color: #000; font-weight: bold;
-            border: none; cursor: pointer; font-size: 18px; border-radius: 5px;
-        }
-        .err { color: #ff0000; margin-top: 10px; font-weight: bold; font-size: 14px; }
+        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .login-box { border: 1px solid #0f0; padding: 40px; background: rgba(0, 20, 0, 0.9); box-shadow: 0 0 20px #0f0; text-align: center; width: 350px; }
+        .typing { font-size: 20px; font-weight: bold; margin-bottom: 20px; border-right: 2px solid #0f0; white-space: nowrap; overflow: hidden; width: 0; }
+        input { background: #000; border: 1px solid #0f0; color: #0f0; padding: 10px; width: 100%; margin-bottom: 20px; outline: none; text-align: center; }
+        button { background: #0f0; color: #000; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; width: 100%; }
+        button:hover { background: #008800; }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
+
     <div class="login-box">
-        <div class="form">
-            <h1>نظام فك التشفير المركزي</h1>
-            <input type="password" id="p" placeholder="ادخل الرمز السري">
-            <button onclick="go()">دخول</button>
-            <div id="e" class="err"></div>
-        </div>
+        <div id="welcome-text" class="typing"></div>
+        <input type="password" placeholder="ENTER ACCESS CODE" id="pin">
+        <button onclick="checkPin()">INITIALIZE SESSION</button>
     </div>
+
     <script>
-        const c = document.getElementById('canvas'); const ctx = c.getContext('2d');
-        c.width = window.innerWidth; c.height = window.innerHeight;
-        const txt = "010101010101010101010101010101"; const f = 16; const cols = c.width / f;
-        const d = []; for (let i = 0; i < cols; i++) d[i] = 1;
-        function draw() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, c.width, c.height);
-            ctx.fillStyle = "#00ff00"; ctx.font = f + "px monospace";
-            for (let i = 0; i < d.length; i++) {
-                const s = txt.charAt(Math.floor(Math.random() * txt.length));
-                ctx.fillText(s, i * f, d[i] * f);
-                if (d[i] * f > c.height && Math.random() > 0.975) d[i] = 0;
-                d[i]++;
+        const text = "Welcome Back Mr. Ali...";
+        let i = 0;
+
+        // وظيفة الكتابة والترحيب الصوتي
+        window.onload = function() {
+            // نطق الجملة
+            let msg = new SpeechSynthesisUtterance("Welcome Back Mister Ali");
+            msg.lang = 'en-US';
+            msg.rate = 0.8; 
+            window.speechSynthesis.speak(msg);
+
+            // تأثير الكتابة
+            function type() {
+                if (i < text.length) {
+                    document.getElementById("welcome-text").innerHTML += text.charAt(i);
+                    document.getElementById("welcome-text").style.width = "auto";
+                    i++;
+                    setTimeout(type, 100);
+                }
             }
-        }
-        setInterval(draw, 35);
-        function go() {
-            if(document.getElementById('p').value === "05195688") {
-                window.location.href = "control_panel.html";
+            type();
+        };
+
+        function checkPin() {
+            if(document.getElementById('pin').value === "1234") { // غير الرمز هنا
+                window.location.href = "image_page.html";
             } else {
-                document.getElementById('e').innerText = "تم رصد محاولة اختراق.. تم التبليغ!";
+                alert("ACCESS DENIED - UNAUTHORIZED ATTEMPT");
             }
         }
     </script>
