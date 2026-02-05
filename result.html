@@ -2,66 +2,99 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>System Diagnostic - Final Stage</title>
+    <title>TERMINAL - SYSTEM OVERRIDE</title>
     <style>
-        body { background: #000; color: #00ff00; font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; }
-        canvas { position: fixed; top: 0; left: 0; z-index: -1; }
-        .container { position: relative; z-index: 1; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-        .console { border: 2px solid #00ff00; padding: 25px; background: rgba(0, 0, 0, 0.9); min-height: 400px; box-shadow: 0 0 30px #00ff00; width: 90%; max-width: 650px; text-align: left; border-radius: 10px; }
-        .line { margin: 15px 0; font-size: 18px; border-bottom: 1px solid #004400; padding-bottom: 10px; }
-        .label { color: #00ff00; font-weight: bold; text-shadow: 0 0 5px #00ff00; }
-        .data { color: #ffffff; }
-        #map-box { display: none; margin-top: 20px; border: 2px solid #00ff00; height: 350px; width: 100%; box-shadow: 0 0 15px #00ff00; }
-        iframe { width: 100%; height: 100%; border: none; }
-        
-        /* التحذيرات */
-        #warning-box { display: none; margin-top: 20px; background: #4a0000; border: 2px solid #ff0000; color: #fff; padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; animation: blinker 1s linear infinite; font-weight: bold; }
-        @keyframes blinker { 50% { opacity: 0.3; } }
-        
-        #final-alert { display: none; background: #000; border: 3px solid #ff0000; color: #ff0000; padding: 20px; margin-top: 20px; border-radius: 10px; text-align: center; box-shadow: 0 0 20px red; }
-        .btn-delete { background: #ff0000; color: #fff; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; margin-top: 15px; border-radius: 5px; font-size: 16px; width: 100%; }
+        body { background: #000; color: #00ff00; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
+        canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.3; }
 
-        /* نافذة السعر النهائية */
-        #payment-modal { display: none; background: #1a0000; border: 4px solid #ff0000; color: #fff; padding: 20px; margin-top: 20px; border-radius: 10px; text-align: center; box-shadow: 0 0 50px red; }
-        .price-tag { font-size: 24px; color: #ffff00; font-weight: bold; margin: 15px 0; text-shadow: 2px 2px #000; }
+        /* حاوية الشاشة الرئيسية كأنها شاشة قديمة */
+        .crt-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%; z-index: 10; pointer-events: none;
+        }
+
+        .container { position: relative; z-index: 5; padding: 20px; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+
+        /* لوحات البيانات الاحترافية */
+        .terminal-header { border-bottom: 2px solid #00ff00; padding-bottom: 5px; display: flex; justify-content: space-between; font-size: 12px; }
+        
+        .main-display { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        .console { 
+            border: 1px solid #00ff00; background: rgba(0, 20, 0, 0.85); 
+            padding: 30px; width: 90%; max-width: 750px; 
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.2); position: relative;
+        }
+
+        .typing { overflow: hidden; white-space: nowrap; border-left: 2px solid #00ff00; animation: caret 0.7s steps(1) infinite; margin: 10px 0; font-size: 18px; width: 0; }
+        @keyframes caret { 50% { border-color: transparent; } }
+
+        .log-stream { position: absolute; left: 10px; top: 100px; font-size: 10px; color: #008800; line-height: 1.2; width: 150px; }
+
+        #map-box { display: none; margin-top: 20px; border: 1px solid #ff0000; height: 300px; width: 100%; filter: grayscale(100%) contrast(150%) brightness(80%) sepia(100%) hue-rotate(50deg); }
+
+        /* ستايل التحذيرات */
+        #warning-area { display: none; }
+        .danger-text { color: #ff0000; font-weight: bold; text-shadow: 0 0 10px #ff0000; animation: pulse 0.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .btn-action { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 10px 20px; cursor: pointer; font-family: 'Courier New'; font-weight: bold; width: 100%; margin-top: 10px; }
+        .btn-action:hover { background: #ff0000; color: #000; }
+
+        #final-bill { display: none; border: 2px dashed #ffff00; padding: 15px; margin-top: 15px; background: rgba(50, 50, 0, 0.3); }
     </style>
 </head>
 <body>
 
+    <div class="crt-overlay"></div>
     <canvas id="matrix"></canvas>
 
     <div class="container">
-        <div class="console">
-            <h2 style="text-align:center; color: #00ff00; text-shadow: 0 0 10px #00ff00;">[نظام الفحص التشخيصي المباشر]</h2>
-            
-            <div class="line"><span class="label">الجهاز:</span> <span id="device" class="data">جاري التعريف...</span></div>
-            <div class="line"><span class="label">الـ IP:</span> <span id="ip" class="data">...</span></div>
-            <div class="line"><span class="label">المزود:</span> <span id="isp" class="data">...</span></div>
-            
-            <div id="map-box">
-                <iframe id="googleMap" src=""></iframe>
-            </div>
+        <div class="terminal-header">
+            <span>STATUS: SYSTEM_OVERRIDE_ACTIVE</span>
+            <span>ENCRYPTION: AES-256</span>
+            <span id="live-clock"></span>
+        </div>
 
-            <div id="warning-box" onclick="showFinalAlert()">
-                ⚠️ تحذير: تم العثور على 4 ملفات داخل جهازك تقوم بتسريب معلومات (إضغط هنا للفحص)
-            </div>
+        <div class="main-display">
+            <div class="console">
+                <div id="logs" class="log-stream"></div>
+                
+                <h3 style="text-align:center; margin-top:0;">[ROOT@ACCESS_GRANTED]</h3>
+                
+                <div class="typing" id="t1">LOADING PROTOCOLS...</div>
+                <div class="typing" id="t2" style="color: #fff;">SCANNING LOCAL NETWORK...</div>
+                <div class="typing" id="t3">BYPASSING FIREWALL [OK]</div>
+                
+                <div id="data-result" style="display:none; margin-top:20px;">
+                    <div class="line"><span style="color:red">> الجهاز:</span> <span id="device">...</span></div>
+                    <div class="line"><span style="color:red">> العنوان:</span> <span id="ip">...</span></div>
+                    <div class="line"><span style="color:red">> المزود:</span> <span id="isp">...</span></div>
+                    
+                    <div id="map-box">
+                        <iframe id="googleMap" width="100%" height="100%" frameborder="0"></iframe>
+                    </div>
 
-            <div id="final-alert">
-                <h3 style="margin-top:0;">🛑 اختراق أمني مكتشف!</h3>
-                <p>تم العثور على 4 مستندات داخل هاتفك تقوم بإرسال جميع بياناتك وجميع صورك وجميع جهات اتصالك وجميع الرسائل إلى مصدر مجهول.</p>
-                <hr style="border-color: #ff0000;">
-                <p style="color: white;">هل تريد العثور على هذه الملفات وحذفها؟</p>
-                <button class="btn-delete" id="deleteBtn" onclick="showPayment()">نعم، ابدأ الحذف الفوري</button>
-            </div>
+                    <div id="warning-area">
+                        <div class="danger-text" style="border: 1px solid red; padding: 10px; margin-top: 15px; text-align: center; cursor:pointer;" onclick="showBill()">
+                            ⚠️ CRITICAL: تم العثور على 4 ملفات تسريب بيانات (اضغط للتفاصيل)
+                        </div>
+                    </div>
 
-            <div id="payment-modal">
-                <h2 style="color: #ff0000; text-decoration: underline;">كلفة تطهير النظام</h2>
-                <p>سعر حذف الملف الواحد: <span style="color: #00ff00;">5,000$</span></p>
-                <p>عدد الملفات المصابة: <span style="color: #00ff00;">4 ملفات</span></p>
-                <div class="price-tag">المبلغ الإجمالي: 20,000$ (دفترين)</div>
-                <p style="font-size: 12px; color: #aaa;">* يجب دفع المبلغ خلال 24 ساعة لتجنب تسريب البيانات للعلن.</p>
-                <button class="btn-delete" style="background: #222;" onclick="location.reload()">إغلاق النظام</button>
+                    <div id="final-bill">
+                        <h4 style="color:yellow; margin:0;">تقرير التطهير الأمني:</h4>
+                        <p style="font-size:14px;">تم العثور على برمجيات خبيثة ترسل صورك ورسائلك لمصدر خارجي.</p>
+                        <p style="font-size:18px; color:#fff;">كلفة الحذف: <span style="color:red;">20,000$ (دفترين)</span></p>
+                        <button class="btn-action" onclick="alert('اتصال السيرفر مقطوع - يرجى الدفع يدوياً')">بدء الحذف الفوري</button>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <div class="terminal-header" style="border-top: 2px solid #00ff00; border-bottom: none;">
+            <span>TRACE_ROUTE: ENABLED</span>
+            <span>TARGET_LOCATED: TRUE</span>
         </div>
     </div>
 
@@ -70,47 +103,70 @@
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const letters = "0101010101010101";
-        const fontSize = 16; const columns = canvas.width / fontSize;
-        const drops = []; for (let x = 0; x < columns; x++) drops[x] = 1;
+        const drops = Array(Math.floor(canvas.width/16)).fill(1);
         function drawMatrix() {
             ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#0f0"; ctx.font = fontSize + "px arial";
-            for (let i = 0; i < drops.length; i++) {
-                const text = letters.charAt(Math.floor(Math.random() * letters.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            ctx.fillStyle = "#0f0"; ctx.font = "15px monospace";
+            drops.forEach((y, i) => {
+                const text = String.fromCharCode(Math.random() * 128);
+                ctx.fillText(text, i * 16, y * 16);
+                if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
-            }
+            });
         }
-        setInterval(drawMatrix, 33);
+        setInterval(drawMatrix, 50);
 
-        window.onload = function() {
-            setTimeout(() => {
-                document.getElementById('device').innerText = "INFINIX (DETECTED)";
-                document.getElementById('ip').innerText = "130.193.246.163";
-                document.getElementById('isp').innerText = "Allay Nawroz Telecom Company/Ltd.";
-                showMap();
-            }, 1000); 
+        // Live Clock
+        setInterval(() => { document.getElementById('live-clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+
+        // Side Logs (الخريط البرمجي الجانبي)
+        const logArea = document.getElementById('logs');
+        const commands = ["GET /sys/root", "PING 127.0.0.1", "TRACE ROUTE", "DECRYPT RSA", "HEX_DUMP", "PORT_SCAN"];
+        setInterval(() => {
+            const p = document.createElement('div');
+            p.innerText = commands[Math.floor(Math.random()*commands.length)] + "..." + Math.random().toString(16).slice(2,8);
+            logArea.prepend(p);
+            if(logArea.children.length > 15) logArea.lastChild.remove();
+        }, 500);
+
+        // Typing Effect Logic
+        function typeText(id, text, speed, callback) {
+            let i = 0;
+            const el = document.getElementById(id);
+            el.style.width = "auto";
+            el.innerText = "";
+            const timer = setInterval(() => {
+                el.innerText += text[i];
+                i++;
+                if(i >= text.length) { clearInterval(timer); if(callback) callback(); }
+            }, speed);
+        }
+
+        // تشغيل العملية (أني مخليها سريعة هسة للفحص، من تقتنع نغيرها لـ 30 دقيقة)
+        window.onload = () => {
+            typeText("t1", "INITIALIZING HACKER_OS V4.0...", 50, () => {
+                typeText("t2", "IDENTIFYING TARGET DEVICE...", 50, () => {
+                    typeText("t3", "ACCESSING SATELLITE FEED... DONE.", 50, () => {
+                        document.getElementById('data-result').style.display = "block";
+                        document.getElementById('device').innerText = "INFINIX (HOT_40_PRO)";
+                        document.getElementById('ip').innerText = "130.193.246.163";
+                        document.getElementById('isp').innerText = "Allay Nawroz Telecom";
+                        showMap();
+                    });
+                });
+            });
         };
 
         function showMap() {
             document.getElementById('map-box').style.display = 'block';
             const lat = 36.1898056; const lon = 44.0156944;
             document.getElementById('googleMap').src = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000!2d${lon}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789&layer=s`;
-            setTimeout(() => { document.getElementById('warning-box').style.display = 'block'; }, 1000);
+            setTimeout(() => { document.getElementById('warning-area').style.display = 'block'; }, 2000);
         }
 
-        function showFinalAlert() {
-            document.getElementById('warning-box').style.display = 'none';
-            document.getElementById('final-alert').style.display = 'block';
-        }
-
-        // الدالة الجديدة لعرض السعر
-        function showPayment() {
-            document.getElementById('final-alert').style.display = 'none';
-            document.getElementById('map-box').style.display = 'none'; // نخفي الخريطة حتى يركز على السعر
-            document.getElementById('payment-modal').style.display = 'block';
+        function showBill() {
+            document.getElementById('final-bill').style.display = 'block';
+            document.getElementById('warning-area').style.display = 'none';
         }
     </script>
 </body>
