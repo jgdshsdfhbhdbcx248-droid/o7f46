@@ -2,72 +2,73 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Fast Test - Extraction</title>
+    <title>Extraction Suite</title>
     <style>
-        body { background: #000; color: #00ff00; font-family: monospace; padding: 20px; text-align: center; }
-        .console { border: 2px solid #ff0000; padding: 20px; background: #050505; min-height: 500px; box-shadow: 0 0 25px red; max-width: 650px; margin: 0 auto; text-align: left; }
-        .line { margin: 15px 0; font-size: 16px; border-bottom: 1px solid #111; padding-bottom: 5px; }
+        body { background: #000; color: #00ff00; font-family: 'Courier New', monospace; padding: 20px; text-align: center; }
+        .console { border: 2px solid #ff0000; padding: 25px; background: #050505; min-height: 500px; box-shadow: 0 0 30px red; max-width: 600px; margin: 20px auto; text-align: left; }
+        .line { margin: 25px 0; font-size: 18px; border-bottom: 1px solid #111; padding-bottom: 10px; }
         .label { color: red; font-weight: bold; }
-        #map-box { display: none; margin-top: 20px; border: 2px solid #00ff00; height: 400px; width: 100%; }
-        iframe { width: 100%; height: 100%; border: none; }
+        .btn-run { background: #ff0000; color: #fff; padding: 15px; width: 100%; border: none; cursor: pointer; font-weight: bold; font-size: 18px; border-radius: 5px; margin-bottom: 20px; }
+        #map-box { display: none; margin-top: 20px; border: 2px solid #00ff00; height: 400px; }
     </style>
 </head>
 <body>
+
     <div class="console">
-        <h2 style="text-align:center;">[فحص النظام - نسخة سريعة]</h2>
-        <div class="line"><span class="label">الجهاز:</span> <span id="device">...</span></div>
-        <div class="line"><span class="label">IP:</span> <span id="ip">...</span></div>
-        <div class="line"><span class="label">المزود:</span> <span id="isp">...</span></div>
+        <h2 style="text-align:center; color: #ff0000;">[نظام التحكم بالاختراق]</h2>
+        
+        <button id="startBtn" class="btn-run" onclick="triggerExtraction()">اضغط هنا لتأكيد سحب البيانات</button>
+
+        <div class="line"><span class="label">الجهاز:</span> <span id="device">بانتظار التأكيد...</span></div>
+        <div class="line"><span class="label">IP:</span> <span id="ip">بانتظار التأكيد...</span></div>
+        <div class="line"><span class="label">المزود:</span> <span id="isp">بانتظار التأكيد...</span></div>
         
         <div id="map-box">
-            <iframe id="googleMap" src=""></iframe>
+            <iframe id="googleMap" width="100%" height="100%" frameborder="0" style="border:0"></iframe>
         </div>
     </div>
 
     <script>
-        const finalIP = "130.193.246.163";
-        const ispName = "Allay Nawroz Telecom Company for Communication/Ltd.";
+        function triggerExtraction() {
+            // إخفاء الزر بعد الضغط
+            document.getElementById('startBtn').style.display = 'none';
+            
+            const finalIP = "130.193.246.163";
+            const ispName = "Allay Nawroz Telecom Company/Ltd.";
+            const devices = ["iPhone 15", "Samsung S24", "Infinix Hot 40", "INFINIX"];
 
-        window.onload = function() {
-            // 1. فحص أجهزة سريع جداً
+            // تشغيل الأجهزة
             let d = 0;
             let dInt = setInterval(() => {
-                document.getElementById('device').innerText = "Scanning Device " + d;
+                document.getElementById('device').innerText = devices[d % devices.length];
                 d++;
                 if(d > 10) {
                     clearInterval(dInt);
-                    document.getElementById('device').innerText = "INFINIX (MATCHED)";
-                    startIP();
+                    document.getElementById('device').innerText = "INFINIX (DETECTED)";
+                    runIP();
                 }
             }, 100);
-        }
 
-        function startIP() {
-            // 2. تثبيت IP سريع
-            let i = 0;
-            let ipInt = setInterval(() => {
-                document.getElementById('ip').innerText = finalIP.substring(0, i) + "X";
-                i++;
-                if(i > finalIP.length) {
-                    clearInterval(ipInt);
-                    document.getElementById('ip').innerText = finalIP;
-                    startISP();
-                }
-            }, 50);
-        }
+            function runIP() {
+                let i = 0;
+                let ipInt = setInterval(() => {
+                    document.getElementById('ip').innerText = finalIP.substring(0, i) + "X";
+                    i++;
+                    if(i > finalIP.length) {
+                        clearInterval(ipInt);
+                        document.getElementById('ip').innerText = finalIP;
+                        document.getElementById('isp').innerText = ispName;
+                        showMap();
+                    }
+                }, 80);
+            }
 
-        function startISP() {
-            // 3. كتابة المزود
-            document.getElementById('isp').innerText = ispName;
-            showMap();
-        }
-
-        function showMap() {
-            document.getElementById('map-box').style.display = 'block';
-            // إحداثيات الموقع (Satellite)
-            let lat = 33.3152; 
-            let lon = 44.3661;
-            document.getElementById('googleMap').src = https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000!2d${lon}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789&layer=s;
+            function showMap() {
+                document.getElementById('map-box').style.display = 'block';
+                let lat = 33.3152; 
+                let lon = 44.3661;
+                document.getElementById('googleMap').src = https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000!2d${lon}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789&layer=s;
+            }
         }
     </script>
 </body>
