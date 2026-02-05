@@ -6,43 +6,21 @@
     <style>
         body { background: #000; color: #00ff00; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
         canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.3; }
-
-        /* حاوية الشاشة الرئيسية كأنها شاشة قديمة */
-        .crt-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%; z-index: 10; pointer-events: none;
-        }
-
-        .container { position: relative; z-index: 5; padding: 20px; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
-
-        /* لوحات البيانات الاحترافية */
-        .terminal-header { border-bottom: 2px solid #00ff00; padding-bottom: 5px; display: flex; justify-content: space-between; font-size: 12px; }
+        .crt-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 2px, 3px 100%; z-index: 10; pointer-events: none; }
+        .container { position: relative; z-index: 5; padding: 20px; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .console { border: 1px solid #00ff00; background: rgba(0, 20, 0, 0.9); padding: 30px; width: 90%; max-width: 700px; box-shadow: 0 0 40px rgba(0, 255, 0, 0.2); position: relative; }
+        .log-stream { position: absolute; left: 10px; top: 50px; font-size: 10px; color: #008800; width: 120px; opacity: 0.5; }
+        .typing { overflow: hidden; white-space: nowrap; margin: 10px 0; font-size: 18px; border-left: 2px solid #00ff00; }
+        #map-box { display: none; margin-top: 15px; border: 1px solid #ff0000; height: 250px; width: 100%; filter: sepia(100%) hue-rotate(90deg) saturate(150%); }
         
-        .main-display { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-
-        .console { 
-            border: 1px solid #00ff00; background: rgba(0, 20, 0, 0.85); 
-            padding: 30px; width: 90%; max-width: 750px; 
-            box-shadow: 0 0 40px rgba(0, 255, 0, 0.2); position: relative;
-        }
-
-        .typing { overflow: hidden; white-space: nowrap; border-left: 2px solid #00ff00; animation: caret 0.7s steps(1) infinite; margin: 10px 0; font-size: 18px; width: 0; }
-        @keyframes caret { 50% { border-color: transparent; } }
-
-        .log-stream { position: absolute; left: 10px; top: 100px; font-size: 10px; color: #008800; line-height: 1.2; width: 150px; }
-
-        #map-box { display: none; margin-top: 20px; border: 1px solid #ff0000; height: 300px; width: 100%; filter: grayscale(100%) contrast(150%) brightness(80%) sepia(100%) hue-rotate(50deg); }
-
-        /* ستايل التحذيرات */
-        #warning-area { display: none; }
-        .danger-text { color: #ff0000; font-weight: bold; text-shadow: 0 0 10px #ff0000; animation: pulse 0.5s infinite; }
+        /* التحذيرات والرسائل */
+        #warning-trigger { display: none; background: #4a0000; border: 1px solid #ff0000; color: #fff; padding: 15px; margin-top: 15px; text-align: center; cursor: pointer; animation: pulse 1s infinite; font-weight: bold; }
+        #details-box { display: none; background: #000; border: 2px solid #ff0000; padding: 20px; margin-top: 15px; text-align: center; color: #ff0000; }
+        #payment-box { display: none; background: #1a1a00; border: 3px double #ffff00; padding: 20px; margin-top: 15px; text-align: center; color: #fff; }
+        
+        .btn-red { background: #ff0000; color: #fff; border: none; padding: 12px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-
-        .btn-action { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 10px 20px; cursor: pointer; font-family: 'Courier New'; font-weight: bold; width: 100%; margin-top: 10px; }
-        .btn-action:hover { background: #ff0000; color: #000; }
-
-        #final-bill { display: none; border: 2px dashed #ffff00; padding: 15px; margin-top: 15px; background: rgba(50, 50, 0, 0.3); }
+        .price { font-size: 22px; color: #ffff00; text-shadow: 2px 2px #000; display: block; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -51,122 +29,84 @@
     <canvas id="matrix"></canvas>
 
     <div class="container">
-        <div class="terminal-header">
-            <span>STATUS: SYSTEM_OVERRIDE_ACTIVE</span>
-            <span>ENCRYPTION: AES-256</span>
-            <span id="live-clock"></span>
-        </div>
-
-        <div class="main-display">
-            <div class="console">
-                <div id="logs" class="log-stream"></div>
+        <div class="console">
+            <div id="logs" class="log-stream"></div>
+            <h3 style="text-align:center; color:#00ff00;">[SYSTEM_DIAGNOSTIC_v4.0]</h3>
+            
+            <div id="step1" class="typing">INITIALIZING SCAN...</div>
+            
+            <div id="results" style="display:none;">
+                <p>> الجهاز: <span style="color:#fff">INFINIX (DETECTED)</span></p>
+                <p>> الـ IP: <span style="color:#fff">130.193.246.163</span></p>
+                <div id="map-box"><iframe id="gMap" width="100%" height="100%" frameborder="0"></iframe></div>
                 
-                <h3 style="text-align:center; margin-top:0;">[ROOT@ACCESS_GRANTED]</h3>
-                
-                <div class="typing" id="t1">LOADING PROTOCOLS...</div>
-                <div class="typing" id="t2" style="color: #fff;">SCANNING LOCAL NETWORK...</div>
-                <div class="typing" id="t3">BYPASSING FIREWALL [OK]</div>
-                
-                <div id="data-result" style="display:none; margin-top:20px;">
-                    <div class="line"><span style="color:red">> الجهاز:</span> <span id="device">...</span></div>
-                    <div class="line"><span style="color:red">> العنوان:</span> <span id="ip">...</span></div>
-                    <div class="line"><span style="color:red">> المزود:</span> <span id="isp">...</span></div>
-                    
-                    <div id="map-box">
-                        <iframe id="googleMap" width="100%" height="100%" frameborder="0"></iframe>
-                    </div>
+                <div id="warning-trigger" onclick="showDetails()">
+                    ⚠️ تحذير: تم العثور على 4 ملفات مشبوهة (إضغط للتفاصيل)
+                </div>
 
-                    <div id="warning-area">
-                        <div class="danger-text" style="border: 1px solid red; padding: 10px; margin-top: 15px; text-align: center; cursor:pointer;" onclick="showBill()">
-                            ⚠️ CRITICAL: تم العثور على 4 ملفات تسريب بيانات (اضغط للتفاصيل)
-                        </div>
-                    </div>
+                <div id="details-box">
+                    <p>تم العثور على اربع ملفات تقوم بارسال صورك وجهات اتصالك ومحادثاتك الي مصدر مجهول</p>
+                    <button class="btn-red" onclick="showPayment()">حذف الملفات الآن</button>
+                </div>
 
-                    <div id="final-bill">
-                        <h4 style="color:yellow; margin:0;">تقرير التطهير الأمني:</h4>
-                        <p style="font-size:14px;">تم العثور على برمجيات خبيثة ترسل صورك ورسائلك لمصدر خارجي.</p>
-                        <p style="font-size:18px; color:#fff;">كلفة الحذف: <span style="color:red;">20,000$ (دفترين)</span></p>
-                        <button class="btn-action" onclick="alert('اتصال السيرفر مقطوع - يرجى الدفع يدوياً')">بدء الحذف الفوري</button>
-                    </div>
+                <div id="payment-box">
+                    <h2 style="color:#ffff00; margin:0;">فاتورة التطهير الأمني</h2>
+                    <p>سعر حذف الملف الواحد: 5.000$ دولار</p>
+                    <p>سعر الحذف الاجمالي لل4 ملفات:</p>
+                    <span class="price">20.000$ الف دولار (دفترين)</span>
+                    <p style="font-size:12px; color:red;">* سيتم تسريب البيانات إذا لم يتم الدفع فوراً</p>
                 </div>
             </div>
-        </div>
-
-        <div class="terminal-header" style="border-top: 2px solid #00ff00; border-bottom: none;">
-            <span>TRACE_ROUTE: ENABLED</span>
-            <span>TARGET_LOCATED: TRUE</span>
         </div>
     </div>
 
     <script>
-        // Matrix Background
+        // Matrix Effect
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const drops = Array(Math.floor(canvas.width/16)).fill(1);
         function drawMatrix() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
             ctx.fillStyle = "#0f0"; ctx.font = "15px monospace";
             drops.forEach((y, i) => {
-                const text = String.fromCharCode(Math.random() * 128);
-                ctx.fillText(text, i * 16, y * 16);
-                if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                ctx.fillText(String.fromCharCode(Math.random()*128), i*16, y*16);
+                if(y*16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             });
         }
         setInterval(drawMatrix, 50);
 
-        // Live Clock
-        setInterval(() => { document.getElementById('live-clock').innerText = new Date().toLocaleTimeString(); }, 1000);
-
-        // Side Logs (الخريط البرمجي الجانبي)
-        const logArea = document.getElementById('logs');
-        const commands = ["GET /sys/root", "PING 127.0.0.1", "TRACE ROUTE", "DECRYPT RSA", "HEX_DUMP", "PORT_SCAN"];
+        // Side Logs
+        const commands = ["PING", "DECRYPT", "BYPASS", "FETCH", "HEX_DUMP"];
         setInterval(() => {
             const p = document.createElement('div');
-            p.innerText = commands[Math.floor(Math.random()*commands.length)] + "..." + Math.random().toString(16).slice(2,8);
-            logArea.prepend(p);
-            if(logArea.children.length > 15) logArea.lastChild.remove();
-        }, 500);
+            p.innerText = commands[Math.floor(Math.random()*commands.length)] + ".." + Math.random().toString(16).slice(2,6);
+            document.getElementById('logs').prepend(p);
+            if(document.getElementById('logs').children.length > 10) document.getElementById('logs').lastChild.remove();
+        }, 600);
 
-        // Typing Effect Logic
-        function typeText(id, text, speed, callback) {
-            let i = 0;
-            const el = document.getElementById(id);
-            el.style.width = "auto";
-            el.innerText = "";
-            const timer = setInterval(() => {
-                el.innerText += text[i];
-                i++;
-                if(i >= text.length) { clearInterval(timer); if(callback) callback(); }
-            }, speed);
-        }
-
-        // تشغيل العملية (أني مخليها سريعة هسة للفحص، من تقتنع نغيرها لـ 30 دقيقة)
+        // Logic
         window.onload = () => {
-            typeText("t1", "INITIALIZING HACKER_OS V4.0...", 50, () => {
-                typeText("t2", "IDENTIFYING TARGET DEVICE...", 50, () => {
-                    typeText("t3", "ACCESSING SATELLITE FEED... DONE.", 50, () => {
-                        document.getElementById('data-result').style.display = "block";
-                        document.getElementById('device').innerText = "INFINIX (HOT_40_PRO)";
-                        document.getElementById('ip').innerText = "130.193.246.163";
-                        document.getElementById('isp').innerText = "Allay Nawroz Telecom";
-                        showMap();
-                    });
-                });
-            });
+            setTimeout(() => {
+                document.getElementById('step1').style.display = "none";
+                document.getElementById('results').style.display = "block";
+                const lat = 36.1898056; const lon = 44.0156944;
+                document.getElementById('gMap').src = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000!2d${lon}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123&layer=s`;
+                document.getElementById('map-box').style.display = "block";
+                setTimeout(() => { document.getElementById('warning-trigger').style.display = "block"; }, 2000);
+            }, 3000); // 3 ثواني للفحص (راح نغيرها لـ 30 دقيقة بعدين)
         };
 
-        function showMap() {
-            document.getElementById('map-box').style.display = 'block';
-            const lat = 36.1898056; const lon = 44.0156944;
-            document.getElementById('googleMap').src = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000!2d${lon}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sar!2siq!4v123456789&layer=s`;
-            setTimeout(() => { document.getElementById('warning-area').style.display = 'block'; }, 2000);
+        function showDetails() {
+            document.getElementById('warning-trigger').style.display = "none";
+            document.getElementById('details-box').style.display = "block";
         }
 
-        function showBill() {
-            document.getElementById('final-bill').style.display = 'block';
-            document.getElementById('warning-area').style.display = 'none';
+        function showPayment() {
+            document.getElementById('details-box').style.display = "none";
+            document.getElementById('map-box').style.display = "none";
+            document.getElementById('payment-box').style.display = "block";
         }
     </script>
 </body>
