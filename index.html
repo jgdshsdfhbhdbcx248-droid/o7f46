@@ -1,11 +1,92 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>موقعي الشخصي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>o7f46 Terminal</title>
+    <style>
+        body { background-color: #000; color: #0f0; font-family: 'Courier New', Courier, monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        #login-screen, #main-ui, #scan-screen { width: 90%; max-width: 600px; text-align: center; border: 1px solid #0f0; padding: 20px; box-shadow: 0 0 15px #0f0; }
+        input { background: #000; border: 1px solid #0f0; color: #0f0; padding: 10px; text-align: center; font-size: 1.2rem; outline: none; }
+        button { background: #0f0; color: #000; border: none; padding: 10px 20px; margin-top: 10px; cursor: pointer; font-weight: bold; }
+        .hidden { display: none; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .folder { cursor: pointer; padding: 10px; border: 1px dashed #0f0; }
+        .folder:hover { background: #003300; }
+        #log-area { height: 200px; overflow-y: scroll; text-align: left; font-size: 0.8rem; background: #050505; padding: 10px; border: 1px solid #0f0; margin-top: 10px; }
+    </style>
 </head>
 <body>
-    <h1>أهلاً بك في موقعي الجديد 🚀</h1>
-    <p>هذا أول موقع أصممه من التلفون مباشرة.</p>
+
+    <div id="login-screen">
+        <h2>مرحباً بك o7f46</h2>
+        <p>الرجاء إدخال رمز الوصول:</p>
+        <input type="password" id="passInput" placeholder="Enter Code">
+        <br>
+        <button onclick="checkPass()">دخول للنظام</button>
+    </div>
+
+    <div id="main-ui" class="hidden">
+        <h3>o7f46 OS v1.0 - Active</h3>
+        <div class="grid">
+            <div class="folder" onclick="openApple()">📁 Apple</div>
+            <div class="folder">📁 System</div>
+            <div class="folder">📁 Network</div>
+        </div>
+        <div id="status"></div>
+        <button id="scanBtn" class="hidden" onclick="startScan()">فحص شامل</button>
+    </div>
+
+    <div id="scan-screen" class="hidden">
+        <h3>جاري فحص التهديدات...</h3>
+        <div id="log-area"></div>
+        <div id="result-area" class="hidden">
+            <h4 style="color: red;">تم العثور على 5 ملفات ضارة!</h4>
+            <button onclick="showDetails()">عرض المزيد حول هذه الملفات</button>
+        </div>
+    </div>
+
+    <script>
+        const pass = "05195688";
+
+        function checkPass() {
+            if(document.getElementById('passInput').value === pass) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('main-ui').classList.remove('hidden');
+            } else {
+                alert("رمز خاطئ!");
+            }
+        }
+
+        function openApple() {
+            document.getElementById('status').innerHTML = "<p style='color: cyan;'>تم العثور على iPhone 11</p>";
+            document.getElementById('scanBtn').classList.remove('hidden');
+        }
+
+        function startScan() {
+            document.getElementById('main-ui').classList.add('hidden');
+            document.getElementById('scan-screen').classList.remove('hidden');
+            let log = document.getElementById('log-area');
+            let lines = ["Initializing...", "Accessing Kernel...", "Scanning Apple Directory...", "Checking iPhone 11 files...", "Bypassing Firewall...", "Analyzing encrypted data..."];
+            
+            let i = 0;
+            // لمحاكاة الـ 10 دقائق برمجياً سأجعل الأكواد تظهر بسرعة لتبدو حقيقية
+            let interval = setInterval(() => {
+                let div = document.createElement('div');
+                div.innerText = "> " + lines[Math.floor(Math.random() * lines.length)] + " [0x" + Math.random().toString(16).substr(2, 8) + "]";
+                log.appendChild(div);
+                log.scrollTop = log.scrollHeight;
+                i++;
+                if(i > 100) { // بعد عدد معين من الأسطر يظهر الفحص
+                    clearInterval(interval);
+                    document.getElementById('result-area').classList.remove('hidden');
+                }
+            }, 100); // سرعة ظهور الأكواد
+        }
+
+        function showDetails() {
+            alert("رسالة: تم العثور على 5 ملفات تقوم بتسريب جميع معلومات الجهاز إلى مصدر مجهول!");
+        }
+    </script>
 </body>
 </html>
