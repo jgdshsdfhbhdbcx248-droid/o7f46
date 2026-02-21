@@ -190,8 +190,10 @@
         function checkSpecialAccess() {
             const entry = prompt("هذا القسم يتطلب رمز التشفير الخاص:");
             if (entry === CYBER_PASS) {
-                alert("تم التحقق من المفتاح الأمني. مرحباً بك في قسم الابتزاز.");
-            } else {
+    alert("تم التحقق من المفتاح الأمني. مرحباً بك في قسم الابتزاز.");
+    window.location.href = "cyber_security.html"; // هذا السطر سيقوم بفتح الصفحة الجديدة
+}
+} else {
                 alert("محاولة دخول غير مصرح بها. تم تسجيل المحاولة!");
             }
         }
