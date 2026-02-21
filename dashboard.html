@@ -19,7 +19,6 @@
             padding: 0;
         }
 
-        /* الشريط العلوي المعدل */
         .navbar {
             background-color: var(--primary-blue);
             color: white;
@@ -36,16 +35,12 @@
         .navbar .user-info {
             font-weight: bold;
             font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .navbar .user-info span {
             color: var(--gold);
         }
 
-        /* الحاوية الرئيسية */
         .main-content {
             padding: 20px;
             max-width: 900px;
@@ -61,22 +56,15 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
-        .welcome-section h2 {
-            margin: 0;
-            color: var(--primary-blue);
-            font-size: 1.4rem;
-        }
-
-        /* شبكة الخدمات */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* عمودين في الموبايل */
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
         }
 
         .service-card {
             background: white;
-            padding: 20px 10px;
+            padding: 25px 10px;
             border-radius: 15px;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -86,12 +74,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
         }
 
         .service-card:active {
             transform: scale(0.95);
-            background-color: #f0f0f0;
         }
 
         .service-card .icon {
@@ -105,20 +91,13 @@
             font-size: 0.85rem;
         }
 
-        /* خيار تسجيل الخروج */
-        .logout-card {
-            background: #fff5f5;
-            border: 1px solid #ffcdd2;
-        }
-
-        .logout-card span {
-            color: var(--danger);
-        }
-
-        /* خيار الابتزاز الإلكتروني (بلون مميز) */
         .alert-card {
             border: 1px solid #ffccbc;
             background: #fffbe6;
+        }
+
+        .logout-card {
+            background: #fff5f5;
         }
 
         .footer {
@@ -126,7 +105,6 @@
             padding: 30px 20px;
             color: #888;
             font-size: 0.8rem;
-            line-height: 1.6;
         }
     </style>
 </head>
@@ -136,63 +114,81 @@
         <div class="user-info">
             المسؤول/ <span>ملازم حيدر</span>
         </div>
-        <div style="font-size: 0.8rem; opacity: 0.8;">الرتبة: ضابط نظام</div>
+        <div style="font-size: 0.8rem; opacity: 0.8;">بوابة التصاريح الأمنية</div>
     </nav>
 
     <div class="main-content">
         <div class="welcome-section">
             <h2>منظومة الخدمات الأمنية الموحدة</h2>
-            <p style="font-size: 0.9rem; color: #666;">أهلاً بك سيادة الملازم، يرجى اختيار القسم المطلوب للمتابعة.</p>
+            <p style="font-size: 0.9rem; color: #666;">سيادة الملازم، الدخول للأقسام يتطلب صلاحية التحقق الثنائي.</p>
         </div>
 
         <div class="services-grid">
-            <div class="service-card" onclick="alert('فتح نظام البطاقة الوطنية...')">
+            <div class="service-card" onclick="checkAccess('البطاقة الوطنية')">
                 <span class="icon">🆔</span>
                 <span>البطاقة الوطنية</span>
             </div>
 
-            <div class="service-card" onclick="alert('فتح نظام المرور...')">
+            <div class="service-card" onclick="checkAccess('مديرية المرور')">
                 <span class="icon">🚗</span>
                 <span>مديرية المرور</span>
             </div>
 
-            <div class="service-card" onclick="alert('فتح نظام الجوازات...')">
+            <div class="service-card" onclick="checkAccess('شؤون الجوازات')">
                 <span class="icon">🛂</span>
                 <span>شؤون الجوازات</span>
             </div>
 
-            <div class="service-card alert-card" onclick="alert('تم تفعيل نظام مكافحة الابتزاز الإلكتروني...')">
+            <div class="service-card alert-card" onclick="checkSpecialAccess()">
                 <span class="icon">⚠️</span>
                 <span>الابتزاز الإلكتروني</span>
             </div>
 
-            <div class="service-card" onclick="alert('فتح نظام الشرطة المجتمعية...')">
+            <div class="service-card" onclick="checkAccess('الشرطة المجتمعية')">
                 <span class="icon">👥</span>
                 <span>الشرطة المجتمعية</span>
             </div>
 
-            <div class="service-card" onclick="alert('فتح نظام شؤون الإقامة...')">
+            <div class="service-card" onclick="checkAccess('شؤون الإقامة')">
                 <span class="icon">🌍</span>
                 <span>شؤون الإقامة</span>
             </div>
 
-            <div class="service-card" onclick="alert('فتح نظام الشكاوى والبلاغات...')">
-                <span class="icon">📩</span>
-                <span>تقديم بلاغ رسمي</span>
-            </div>
-
             <div class="service-card logout-card" onclick="location.href='index.html'">
                 <span class="icon">⬅️</span>
-                <span>تسجيل الخروج</span>
+                <span style="color:red">تسجيل الخروج</span>
             </div>
         </div>
     </div>
 
-    <div class="footer">
-        وزارة الداخلية العراقية <br>
-        مديرية تكنولوجيا المعلومات والاتصالات <br>
-        حقوق الوصول محفوظة للمخوّلين فقط 2026
-    </div>
+    <script>
+        // دالة التحقق للأقسام العادية
+        function checkAccess(serviceName) {
+            const pass = prompt("يرجى إدخال رمز صلاحية الوصول لقسم (" + serviceName + "):");
+            if (pass === "05195688") {
+                alert("تم التحقق بنجاح. جاري فتح " + serviceName);
+                // هنا مستقبلاً نفتح صفحة القسم
+            } else {
+                alert("عذراً، الرمز خطأ. لا تملك صلاحية الوصول!");
+            }
+        }
 
+        // دالة التحقق لقسم الابتزاز الإلكتروني
+        function checkSpecialAccess() {
+            const pass = prompt("تحذير: هذا القسم عالي السرية. أدخل رمز التشفير:");
+            const secretKey = "gsuwfayy62828&$@-_7$&_ywiw";
+            
+            if (pass === secretKey) {
+                alert("مرحباً سيادة الملازم. تم الدخول لمنظومة مكافحة الابتزاز.");
+                // هنا نفتح صفحة الابتزاز
+            } else {
+                alert("تنبيه أمني: محاولة دخول غير مصرح بها!");
+            }
+        }
+    </script>
+
+    <div class="footer">
+        وزارة الداخلية العراقية | 2026
+    </div>
 </body>
 </html>
