@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة الخدمات الإلكترونية | وزارة الداخلية</title>
+    <title>منظومة الخدمات الأمنية | وزارة الداخلية</title>
     <style>
         :root {
             --primary-blue: #1a237e;
             --gold: #c5a059;
             --light-bg: #f0f2f5;
             --danger: #d32f2f;
+            --security-green: #1b5e20;
         }
 
         body {
@@ -32,43 +33,38 @@
             z-index: 1000;
         }
 
-        .navbar .user-info {
-            font-weight: bold;
-            font-size: 1rem;
-        }
-
         .navbar .user-info span {
             color: var(--gold);
+            font-weight: bold;
         }
 
         .main-content {
             padding: 20px;
-            max-width: 900px;
+            max-width: 1000px;
             margin: auto;
         }
 
         .welcome-section {
             background: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             border-right: 6px solid var(--gold);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
         .services-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
 
         .service-card {
             background: white;
-            padding: 25px 10px;
-            border-radius: 15px;
+            padding: 20px 5px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             border: 1px solid #eee;
             cursor: pointer;
             display: flex;
@@ -77,34 +73,38 @@
         }
 
         .service-card:active {
-            transform: scale(0.95);
+            transform: scale(0.96);
+            background-color: #f5f5f5;
         }
 
         .service-card .icon {
-            font-size: 2.2rem;
-            margin-bottom: 8px;
+            font-size: 2rem;
+            margin-bottom: 5px;
         }
 
         .service-card span {
             font-weight: bold;
             color: #333;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
-        .alert-card {
-            border: 1px solid #ffccbc;
-            background: #fffbe6;
+        /* تمييز قسم الابتزاز */
+        .cyber-card {
+            background: #fffde7;
+            border: 1px solid #fff176;
         }
 
-        .logout-card {
-            background: #fff5f5;
+        /* تمييز الأقسام الاستخباراتية */
+        .intel-card {
+            background: #eceff1;
+            border: 1px solid #b0bec5;
         }
 
         .footer {
             text-align: center;
-            padding: 30px 20px;
+            padding: 30px;
             color: #888;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
     </style>
 </head>
@@ -114,13 +114,13 @@
         <div class="user-info">
             المسؤول/ <span>ملازم حيدر</span>
         </div>
-        <div style="font-size: 0.8rem; opacity: 0.8;">بوابة التصاريح الأمنية</div>
+        <div style="font-size: 0.7rem; border: 1px solid var(--gold); padding: 2px 5px; border-radius: 4px;">نظام التصريح الأمني</div>
     </nav>
 
     <div class="main-content">
         <div class="welcome-section">
-            <h2>منظومة الخدمات الأمنية الموحدة</h2>
-            <p style="font-size: 0.9rem; color: #666;">سيادة الملازم، الدخول للأقسام يتطلب صلاحية التحقق الثنائي.</p>
+            <h2 style="margin:0; font-size: 1.2rem; color: var(--primary-blue);">لوحة التحكم الأمنية الموحدة</h2>
+            <p style="font-size: 0.8rem; color: #666; margin: 5px 0 0 0;">يرجى إدخال رمز الصلاحية عند الانتقال لأي قسم.</p>
         </div>
 
         <div class="services-grid">
@@ -139,56 +139,67 @@
                 <span>شؤون الجوازات</span>
             </div>
 
-            <div class="service-card alert-card" onclick="checkSpecialAccess()">
+            <div class="service-card" onclick="checkAccess('مكافحة المخدرات')">
+                <span class="icon">💊</span>
+                <span>مكافحة المخدرات</span>
+            </div>
+
+            <div class="service-card" onclick="checkAccess('الأدلة الجنائية')">
+                <span class="icon">🔬</span>
+                <span>الأدلة الجنائية</span>
+            </div>
+
+            <div class="service-card intel-card" onclick="checkAccess('مديرية الاستخبارات')">
+                <span class="icon">🦅</span>
+                <span>مديرية الاستخبارات</span>
+            </div>
+
+            <div class="service-card intel-card" onclick="checkAccess('خلية الصقور')">
+                <span class="icon">⚡</span>
+                <span>خلية الصقور</span>
+            </div>
+
+            <div class="service-card cyber-card" onclick="checkSpecialAccess()">
                 <span class="icon">⚠️</span>
                 <span>الابتزاز الإلكتروني</span>
             </div>
 
-            <div class="service-card" onclick="checkAccess('الشرطة المجتمعية')">
-                <span class="icon">👥</span>
-                <span>الشرطة المجتمعية</span>
-            </div>
-
-            <div class="service-card" onclick="checkAccess('شؤون الإقامة')">
-                <span class="icon">🌍</span>
-                <span>شؤون الإقامة</span>
-            </div>
-
-            <div class="service-card logout-card" onclick="location.href='index.html'">
-                <span class="icon">⬅️</span>
+            <div class="service-card" style="background: #ffebee;" onclick="location.href='index.html'">
+                <span class="icon">🔒</span>
                 <span style="color:red">تسجيل الخروج</span>
             </div>
         </div>
     </div>
 
     <script>
-        // دالة التحقق للأقسام العادية
-        function checkAccess(serviceName) {
-            const pass = prompt("يرجى إدخال رمز صلاحية الوصول لقسم (" + serviceName + "):");
-            if (pass === "05195688") {
-                alert("تم التحقق بنجاح. جاري فتح " + serviceName);
-                // هنا مستقبلاً نفتح صفحة القسم
+        const MAIN_PASS = "05195688";
+        const CYBER_PASS = "gsuwfayy62828&$@-_7$&_ywiw";
+
+        // دالة الأقسام العامة
+        function checkAccess(name) {
+            const entry = prompt("رمز صلاحية الوصول لقسم (" + name + "):");
+            if (entry === MAIN_PASS) {
+                alert("تم التحقق. جاري تحويلك إلى " + name);
+                // هنا نربط الصفحات مستقبلاً
             } else {
-                alert("عذراً، الرمز خطأ. لا تملك صلاحية الوصول!");
+                alert("رمز الصلاحية غير صحيح!");
             }
         }
 
-        // دالة التحقق لقسم الابتزاز الإلكتروني
+        // دالة قسم الابتزاز الخاص
         function checkSpecialAccess() {
-            const pass = prompt("تحذير: هذا القسم عالي السرية. أدخل رمز التشفير:");
-            const secretKey = "gsuwfayy62828&$@-_7$&_ywiw";
-            
-            if (pass === secretKey) {
-                alert("مرحباً سيادة الملازم. تم الدخول لمنظومة مكافحة الابتزاز.");
-                // هنا نفتح صفحة الابتزاز
+            const entry = prompt("هذا القسم يتطلب رمز التشفير الخاص:");
+            if (entry === CYBER_PASS) {
+                alert("تم التحقق من المفتاح الأمني. مرحباً بك في قسم الابتزاز.");
             } else {
-                alert("تنبيه أمني: محاولة دخول غير مصرح بها!");
+                alert("محاولة دخول غير مصرح بها. تم تسجيل المحاولة!");
             }
         }
     </script>
 
     <div class="footer">
-        وزارة الداخلية العراقية | 2026
+        وزارة الداخلية - جمهورية العراق <br>
+        نظام إدارة البيانات المركزي 2026
     </div>
 </body>
 </html>
