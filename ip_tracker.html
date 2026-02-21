@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظومة التتبع الجغرافي | سري للغاية</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0a0e14;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .tracker-box {
+            max-width: 500px;
+            margin: 50px auto;
+            background: #161b22;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #ff3e3e;
+            box-shadow: 0 0 20px rgba(255, 62, 62, 0.2);
+        }
+        h2 { color: #ff3e3e; margin-bottom: 25px; }
+        input {
+            width: 100%;
+            padding: 15px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            color: #00ff00; /* لون أخضر مثل شاشات الاختراق */
+            border-radius: 8px;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+        .search-btn {
+            width: 100%;
+            padding: 15px;
+            background: #ff3e3e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        #result-display {
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px dashed #c5a059;
+            display: none;
+            background: rgba(197, 160, 89, 0.1);
+            color: #c5a059;
+            text-align: right;
+            font-size: 0.9rem;
+        }
+        .back-link {
+            display: block;
+            margin-top: 30px;
+            color: #8b949e;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tracker-box">
+    <h2>رصد الموقع الجغرافي (IP)</h2>
+    <p style="color: #8b949e; font-size: 0.8rem; margin-bottom: 20px;">أدخل عنوان البروتوكول الخاص بالجهاز المطلوب تتبعه</p>
+    
+    <input type="text" id="ipInput" placeholder="192.168.X.X">
+    
+    <button class="search-btn" onclick="startTracking()">بدء عملية التتبع</button>
+
+    <div id="result-display">
+        <strong>[جاري تحليل البيانات...]</strong><br>
+        <span id="loading-text">يتم الآن الاتصال بالأقمار الصناعية...</span>
+    </div>
+</div>
+
+<a href="cyber_security.html" class="back-link">العودة لغرفة العمليات</a>
+
+<script>
+    function startTracking() {
+        const ip = document.getElementById('ipInput').value;
+        const resultDiv = document.getElementById('result-display');
+        const loadingText = document.getElementById('loading-text');
+
+        if (ip === "") {
+            alert("يرجى إدخال عنوان IP أولاً");
+            return;
+        }
+
+        resultDiv.style.display = "block";
+        
+        // محاكاة عملية البحث
+        setTimeout(() => {
+            loadingText.innerHTML = "تم اختراق إحداثيات الجهاز بنجاح...<br><br>" +
+                                   "📍 الموقع المتوقع: بغداد - حي الكرادة<br>" +
+                                   "📡 مزود الخدمة: Earthlink<br>" +
+                                   "🎯 نسبة الدقة: 94%";
+        }, 3000);
+    }
+</script>
+
+</body>
+</html>
