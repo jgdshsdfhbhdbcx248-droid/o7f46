@@ -20,7 +20,6 @@
             padding: 0;
         }
 
-        /* رأس الصفحة */
         .header {
             background: linear-gradient(to bottom, #1a237e, #0a0e14);
             padding: 20px;
@@ -42,7 +41,6 @@
             padding: 20px;
         }
 
-        /* كرت المعلومات الحساسة */
         .info-card {
             background: #161b22;
             border: 1px solid #30363d;
@@ -53,31 +51,28 @@
 
         .info-card h3 {
             color: var(--neon-red);
-            margin-top: 0;
+            margin: 0 0 10px 0;
             font-size: 1.1rem;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
         }
 
-        /* أزرار العمليات */
         .action-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 15px;
+            gap: 12px;
         }
 
         .action-btn {
             background: #21262d;
             color: white;
-            padding: 18px;
+            padding: 15px;
             border: 1px solid #30363d;
-            border-radius: 8px;
+            border-radius: 10px;
             text-align: right;
             cursor: pointer;
-            font-weight: bold;
             display: flex;
             align-items: center;
             gap: 15px;
+            transition: 0.3s;
         }
 
         .action-btn:active {
@@ -86,14 +81,15 @@
         }
 
         .icon-circle {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             background: #0d1117;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             border: 1px solid var(--neon-red);
+            font-size: 1.2rem;
         }
 
         .footer-nav {
@@ -106,8 +102,8 @@
             text-decoration: none;
             font-size: 0.9rem;
             border: 1px solid var(--gold);
-            padding: 8px 20px;
-            border-radius: 5px;
+            padding: 10px 25px;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -115,45 +111,45 @@
 
     <div class="header">
         <h2 style="margin:0;">منظومة مكافحة الابتزاز</h2>
-        <p style="font-size: 0.8rem; color: var(--gold);">الوصول المصرح به: ملازم حيدر</p>
+        <p style="font-size: 0.8rem; color: var(--gold);">المسؤول المصرح به: ملازم حيدر</p>
     </div>
 
     <div class="status-bar">
-        <span>الحالة: متصل بالخادم المركزي</span>
-        <span>التشفير: AES-256</span>
+        <span>الحالة: متصل</span>
+        <span>بروتوكول حماية: نشط</span>
     </div>
 
     <div class="main-container">
         
         <div class="info-card">
-            <h3>⚠️ تنبيهات أمنية نشطة</h3>
-            <p style="font-size: 0.85rem; color: var(--text-gray);">يوجد (3) بلاغات جديدة تحت المعالجة في منطقة بغداد.</p>
+            <h3>⚠️ تنبيهات أمنية</h3>
+            <p style="font-size: 0.85rem; color: var(--text-gray); margin:0;">نظام التشفير مفعل. يرجى إدخال رموز الصلاحية لكل عملية.</p>
         </div>
 
         <div class="action-grid">
-            <div class="action-btn" onclick="alert('جاري سحب قائمة البلاغات الجديدة...')">
+            <div class="action-btn" onclick="checkAccess('البلاغات الواردة', 'report_form.html')">
                 <div class="icon-circle">📂</div>
                 <span>عرض قائمة البلاغات الواردة</span>
             </div>
 
-            <div class="action-btn" onclick="alert('جاري فتح قاعدة بيانات المشتبه بهم...')">
+            <div class="action-btn" onclick="checkAccess('بيانات المبتزين', '#')">
                 <div class="icon-circle">👤</div>
                 <span>قاعدة بيانات المبتزين</span>
             </div>
 
-            <div class="action-btn" onclick="alert('تنبيه: جاري تتبع الموقع الجغرافي...')">
-                <div class="icon-circle">📍</div>
-                <span>تتبع المواقع الجغرافية (IP)</span>
-            </div>
-
-            <div class="action-btn" onclick="alert('فتح سجل المحادثات المؤرشفة...')">
+            <div class="action-btn" onclick="checkAccess('أرشيف المحادثات', '#')">
                 <div class="icon-circle">💬</div>
                 <span>أرشيف المحادثات والصور</span>
             </div>
 
-            <div class="action-btn" onclick="alert('جاري إرسال طلب حظر الحسابات...')">
+            <div class="action-btn" onclick="checkAccess('طلب حظر حسابات', '#')">
                 <div class="icon-circle">🚫</div>
                 <span>طلب حظر حسابات المبتزين</span>
+            </div>
+
+            <div class="action-btn" style="border: 1px solid var(--gold);" onclick="checkIPAccess()">
+                <div class="icon-circle" style="border-color: var(--gold);">📍</div>
+                <span>تتبع المواقع الجغرافية (IP)</span>
             </div>
         </div>
 
@@ -161,6 +157,33 @@
             <a href="dashboard.html" class="back-btn">العودة للوحة الرئيسية</a>
         </div>
     </div>
+
+    <script>
+        const GENERAL_PASS = "asas05195688";
+        const IP_PASS = "527gsywg&@$-_€€ywihsu";
+
+        // دالة الوصول للحقول العامة
+        function checkAccess(title, targetUrl) {
+            const entry = prompt("أدخل رمز صلاحية الوصول لقسم (" + title + "):");
+            if (entry === GENERAL_PASS) {
+                alert("تم التحقق. جاري الدخول...");
+                if(targetUrl !== '#') window.location.href = targetUrl;
+            } else if (entry !== null) {
+                alert("رمز الوصول غير صحيح!");
+            }
+        }
+
+        // دالة الوصول لحقل الـ IP
+        function checkIPAccess() {
+            const entry = prompt("تنبيه أمني: مطلوب رمز فك التشفير الجغرافي:");
+            if (entry === IP_PASS) {
+                alert("تم فك التشفير. جاري تشغيل منظومة التتبع...");
+                window.location.href = "ip_tracker.html";
+            } else if (entry !== null) {
+                alert("فشل التحقق! تم حظر محاولة الدخول.");
+            }
+        }
+    </script>
 
 </body>
 </html>
