@@ -3,85 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الخدمات | وزارة الداخلية</title>
+    <title>بوابة الخدمات الإلكترونية | وزارة الداخلية</title>
     <style>
+        :root {
+            --primary-blue: #1a237e;
+            --gold: #c5a059;
+            --light-bg: #f0f2f5;
+            --danger: #d32f2f;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
+            background-color: var(--light-bg);
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
-        .header {
-            background: #1a237e;
+
+        /* الشريط العلوي المعدل */
+        .navbar {
+            background-color: var(--primary-blue);
             color: white;
-            padding: 15px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        .user-info {
+
+        .navbar .user-info {
+            font-weight: bold;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar .user-info span {
+            color: var(--gold);
+        }
+
+        /* الحاوية الرئيسية */
+        .main-content {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .welcome-section {
             background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            border-right: 5px solid #c5a059;
+            padding: 20px;
+            border-radius: 12px;
+            border-right: 6px solid var(--gold);
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
+
+        .welcome-section h2 {
+            margin: 0;
+            color: var(--primary-blue);
+            font-size: 1.4rem;
+        }
+
+        /* شبكة الخدمات */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(2, 1fr); /* عمودين في الموبايل */
+            gap: 12px;
         }
+
         .service-card {
             background: white;
-            padding: 20px;
+            padding: 20px 10px;
+            border-radius: 15px;
             text-align: center;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             transition: 0.3s;
+            border: 1px solid #eee;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        .service-card:hover {
-            transform: translateY(-5px);
-            border: 1px solid #1a237e;
+
+        .service-card:active {
+            transform: scale(0.95);
+            background-color: #f0f0f0;
         }
-        .service-card i {
-            font-size: 2rem;
-            color: #1a237e;
-            display: block;
-            margin-bottom: 10px;
+
+        .service-card .icon {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+
+        .service-card span {
+            font-weight: bold;
+            color: #333;
+            font-size: 0.85rem;
+        }
+
+        /* خيار تسجيل الخروج */
+        .logout-card {
+            background: #fff5f5;
+            border: 1px solid #ffcdd2;
+        }
+
+        .logout-card span {
+            color: var(--danger);
+        }
+
+        /* خيار الابتزاز الإلكتروني (بلون مميز) */
+        .alert-card {
+            border: 1px solid #ffccbc;
+            background: #fffbe6;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #888;
+            font-size: 0.8rem;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>بوابة الخدمات الإلكترونية</h1>
-</div>
+    <nav class="navbar">
+        <div class="user-info">
+            المسؤول/ <span>ملازم حيدر</span>
+        </div>
+        <div style="font-size: 0.8rem; opacity: 0.8;">الرتبة: ضابط نظام</div>
+    </nav>
 
-<div class="user-info">
-    <strong>مرحباً بك:</strong> المسؤول (Admin) <br>
-    <strong>آخر تسجيل دخول:</strong> اليوم، الساعة 12:30 م
-</div>
+    <div class="main-content">
+        <div class="welcome-section">
+            <h2>منظومة الخدمات الأمنية الموحدة</h2>
+            <p style="font-size: 0.9rem; color: #666;">أهلاً بك سيادة الملازم، يرجى اختيار القسم المطلوب للمتابعة.</p>
+        </div>
 
-<div class="services-grid">
-    <div class="service-card">
-        <span>📄</span>
-        <p>البطاقة الوطنية</p>
+        <div class="services-grid">
+            <div class="service-card" onclick="alert('فتح نظام البطاقة الوطنية...')">
+                <span class="icon">🆔</span>
+                <span>البطاقة الوطنية</span>
+            </div>
+
+            <div class="service-card" onclick="alert('فتح نظام المرور...')">
+                <span class="icon">🚗</span>
+                <span>مديرية المرور</span>
+            </div>
+
+            <div class="service-card" onclick="alert('فتح نظام الجوازات...')">
+                <span class="icon">🛂</span>
+                <span>شؤون الجوازات</span>
+            </div>
+
+            <div class="service-card alert-card" onclick="alert('تم تفعيل نظام مكافحة الابتزاز الإلكتروني...')">
+                <span class="icon">⚠️</span>
+                <span>الابتزاز الإلكتروني</span>
+            </div>
+
+            <div class="service-card" onclick="alert('فتح نظام الشرطة المجتمعية...')">
+                <span class="icon">👥</span>
+                <span>الشرطة المجتمعية</span>
+            </div>
+
+            <div class="service-card" onclick="alert('فتح نظام شؤون الإقامة...')">
+                <span class="icon">🌍</span>
+                <span>شؤون الإقامة</span>
+            </div>
+
+            <div class="service-card" onclick="alert('فتح نظام الشكاوى والبلاغات...')">
+                <span class="icon">📩</span>
+                <span>تقديم بلاغ رسمي</span>
+            </div>
+
+            <div class="service-card logout-card" onclick="location.href='index.html'">
+                <span class="icon">⬅️</span>
+                <span>تسجيل الخروج</span>
+            </div>
+        </div>
     </div>
-    <div class="service-card">
-        <span>🛂</span>
-        <p>شؤون الجوازات</p>
+
+    <div class="footer">
+        وزارة الداخلية العراقية <br>
+        مديرية تكنولوجيا المعلومات والاتصالات <br>
+        حقوق الوصول محفوظة للمخوّلين فقط 2026
     </div>
-    <div class="service-card">
-        <span>🚗</span>
-        <p>مديرية المرور</p>
-    </div>
-    <div class="service-card" onclick="location.href='index.html'">
-        <span>⬅️</span>
-        <p>تسجيل الخروج</p>
-    </div>
-</div>
 
 </body>
 </html>
