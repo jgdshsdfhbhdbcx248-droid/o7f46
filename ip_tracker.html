@@ -1,139 +1,22 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام التعقب الجغرافي | سري للغاية</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0a0e14;
-            color: white;
-            margin: 0;
-            padding: 15px;
-            text-align: center;
-        }
-        .tracker-box {
-            max-width: 600px;
-            margin: auto;
-            background: #161b22;
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px solid #c5a059;
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            background: #0d1117;
-            border: 1px solid #30363d;
-            color: #00ff00;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            text-align: center;
-            margin-bottom: 15px;
-            font-family: monospace;
-        }
-        .search-btn {
-            width: 100%;
-            padding: 12px;
-            background: #ff3e3e;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        /* تصميم الخريطة */
-        #map {
-            height: 300px;
-            width: 100%;
-            margin-top: 20px;
-            border-radius: 10px;
-            border: 2px solid #30363d;
-            display: none; /* مخفية حتى نضغط بحث */
-        }
-        #result-details {
-            margin-top: 20px;
-            text-align: right;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-            border-right: 4px solid #00ff00;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-        .status-text {
-            color: #ff3e3e;
-            font-weight: bold;
-            margin-top: 10px;
-            display: none;
-        }
-    </style>
-</head>
-<body>
-
-<div class="tracker-box">
-    <h3 style="color: #c5a059;">نظام الرصد التكتيكي</h3>
-    <input type="text" id="ipInput" placeholder="أدخل عنوان IP للجهاز">
-    <button class="search-btn" onclick="startTracking()">بدء التتبع والتقريب</button>
-    
-    <div id="status" class="status-text">جاري الاتصال بالأقمار الصناعية...</div>
-    
-    <div id="map"></div>
-
-    <div id="result-details">
-        <strong style="color: #00ff00;">✅ تم التحديد بنجاح</strong><br>
-        <span>نوع الهاتف: <b>infinix</b></span><br>
-        <span>الموقع المكتشف: <b>العراق - أربيل</b></span><br>
-        <span>صلاحيات الوصول: <br><small style="color: #b0bec5; font-family: monospace;">62951825.5172727.528285393.527</small></span>
-    </div>
-</div>
-
-<a href="cyber_security.html" style="color: #8b949e; display: block; margin-top: 20px; text-decoration: none;">العودة للخلف</a>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-    let map;
-    function startTracking() {
-        const ip = document.getElementById('ipInput').value;
-        if (!ip) { alert("أدخل الـ IP أولاً"); return; }
+function openFinalPage(type) {
+    let code = prompt("أدخل رمز الحماية النهائي:");
+    
+    let formData = new FormData();
+    formData.append('c', code);
 
-        document.getElementById('status').style.display = "block";
-        document.getElementById('map').style.display = "block";
-        document.getElementById('result-details').style.display = "none";
-
-        // إحداثيات أربيل اللي حددتها
-        const targetLat = 36.1929669;
-        const targetLng = 44.0134453;
-
-        // تهيئة الخريطة بزووم بعيد جداً (العالم)
-        if (map) map.remove(); 
-        map = L.map('map').setView([33.3152, 44.3661], 5); // نبدأ من بغداد بزووم بعيد
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-        // تأثير التقريب التدريجي (FlyTo)
-        setTimeout(() => {
-            document.getElementById('status').innerText = "جاري الاقتراب من الهدف...";
-            map.flyTo([targetLat, targetLng], 16, {
-                animate: true,
-                duration: 4 // مدة الحركة 4 ثواني
-            });
-        }, 1500);
-
-        // بعد انتهاء الحركة، نظهر التفاصيل
-        map.on('moveend', function(){
-            document.getElementById('status').innerText = "تم تحديد موقع الهدف بدقة!";
-            document.getElementById('result-details').style.display = "block";
-            L.marker([targetLat, targetLng]).addTo(map)
-                .bindPopup('موقع الجهاز المبتز')
-                .openPopup();
-        });
-    }
+    fetch('final_check.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        if(data.trim() === "ok") {
+            alert("تم التحقق.. جاري التحميل");
+            // حط رابط الصفحة اللي تريد تفتحها هنا
+        } else {
+            alert("الرمز النهائي خطأ!");
+        }
+    });
+}
 </script>
-
-</body>
-</html>
