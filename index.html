@@ -95,9 +95,7 @@
 
 <div class="login-container">
     <img src="IMG_4274.png" alt="شعار وزارة الداخلية" class="logo">
-    
     <h2>بوابة الدخول الموحدة</h2>
-    
     <div id="errorMessage" class="error-msg">بيانات الدخول غير صحيحة!</div>
 
     <form id="loginForm">
@@ -105,39 +103,67 @@
             <label for="username">اسم المستخدم</label>
             <input type="text" id="username" placeholder="admin" required>
         </div>
-        
         <div class="input-group">
             <label for="password">كلمة المرور</label>
             <input type="password" id="password" placeholder="********" required>
         </div>
-        
-        <button type="submit">تسجيل الدخول</button>
+        <button type="submit" id="submitBtn">تسجيل الدخول</button>
     </form>
 
-    <div class="footer-text">
-        © 2026 جميع الحقوق محفوظة لوزارة الداخلية
-    </div>
+    <div class="footer-text">© 2026 جميع الحقوق محفوظة لوزارة الداخلية</div>
 </div>
 
-<script>
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault(); 
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+    // المعلومات الخاصة بـ Firebase مالتك
+    const firebaseConfig = {
+        apiKey: "AIzaSyB5SbOv4dcwrWPz8-QTK9cY02e5a6xsHKY",
+        authDomain: "myapp-bc1d6.firebaseapp.com",
+        projectId: "myapp-bc1d6",
+        storageBucket: "myapp-bc1d6.firebasestorage.app",
+        messagingSenderId: "421966866384",
+        appId: "1:421966866384:web:89b1028b297741951bfbd5",
+        databaseURL: "https://myapp-bc1d6-default-rtdb.firebaseio.com/"
+    };
+
+    // تهيئة النظام
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
         const user = document.getElementById('username').value;
         const pass = document.getElementById('password').value;
         const errorDiv = document.getElementById('errorMessage');
+        const btn = document.getElementById('submitBtn');
 
-        // البيانات التي طلبتها
-        const correctUser = "admin";
-        const correctPass = "dfaubejxvwixg62$@$&725296282&$@&$ags";
+        btn.innerText = "جاري التحقق...";
+        btn.disabled = true;
 
-        if (user === correctUser && pass === correctPass) {
-            // التحويل للصفحة الثانية
-            window.location.href = "dashboard.html"; 
-        } else {
-            errorDiv.style.display = "block";
-            alert("خطأ في البيانات، حاول مرة أخرى");
-        }
+        const dbRef = ref(db);
+        
+        // جلب البيانات من فرع login_info بداخل Firebase
+        get(child(dbRef, `login_info`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                if (user === data.user && pass === data.pass) {
+                    window.location.href = "dashboard.html"; 
+                } else {
+                    errorDiv.style.display = "block";
+                    btn.innerText = "تسجيل الدخول";
+                    btn.disabled = false;
+                }
+            } else {
+                alert("تنبيه: قاعدة البيانات لا تحتوي على بيانات الدخول!");
+            }
+        }).catch((error) => {
+            console.error(error);
+            alert("حدث خطأ في الاتصال بالخادم المركزي.");
+            btn.disabled = false;
+        });
     });
 </script>
 
