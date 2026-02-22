@@ -1,206 +1,25 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظومة الخدمات الأمنية | وزارة الداخلية</title>
-    <style>
-        :root {
-            --primary-blue: #1a237e;
-            --gold: #c5a059;
-            --light-bg: #f0f2f5;
-            --danger: #d32f2f;
-        }
+<script>
+function checkFeature(featureName) {
+    let code = prompt("أدخل رمز الوصول لهذه الخاصية:");
+    
+    let formData = new FormData();
+    formData.append('c', code);
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--light-bg);
-            margin: 0;
-            padding: 0;
-        }
-
-        /* الشريط العلوي */
-        .navbar {
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .navbar .user-info span {
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        .main-content {
-            padding: 20px;
-            max-width: 1000px;
-            margin: auto;
-        }
-
-        .welcome-section {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            border-right: 6px solid var(--gold);
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        /* شبكة المربعات */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .service-card {
-            background: white;
-            padding: 25px 5px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: 0.3s;
-        }
-
-        .service-card:active {
-            transform: scale(0.95);
-            background-color: #f0f0f0;
-        }
-
-        .service-card .icon {
-            font-size: 2.2rem;
-            margin-bottom: 8px;
-        }
-
-        .service-card span {
-            font-weight: bold;
-            color: #333;
-            font-size: 0.85rem;
-        }
-
-        /* تمييز قسم الابتزاز */
-        .cyber-card {
-            background: #fffde7;
-            border: 1px solid #fff176;
-        }
-
-        /* تمييز الأقسام الاستخباراتية */
-        .intel-card {
-            background: #eceff1;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 30px;
-            color: #888;
-            font-size: 0.75rem;
-        }
-    </style>
-</head>
-<body>
-
-    <nav class="navbar">
-        <div class="user-info">
-            المسؤول/ <span>ملازم حيدر</span>
-        </div>
-        <div style="font-size: 0.7rem; border: 1px solid var(--gold); padding: 2px 5px; border-radius: 4px;">نظام التصريح الأمني</div>
-    </nav>
-
-    <div class="main-content">
-        <div class="welcome-section">
-            <h2 style="margin:0; font-size: 1.2rem; color: var(--primary-blue);">لوحة التحكم الأمنية الموحدة</h2>
-            <p style="font-size: 0.8rem; color: #666; margin: 5px 0 0 0;">سيادة الملازم، يرجى إدخال رمز الصلاحية المطلوب للدخول.</p>
-        </div>
-
-        <div class="services-grid">
-            <div class="service-card" onclick="checkAccess('البطاقة الوطنية')">
-                <span class="icon">🆔</span>
-                <span>البطاقة الوطنية</span>
-            </div>
-
-            <div class="service-card" onclick="checkAccess('مديرية المرور')">
-                <span class="icon">🚗</span>
-                <span>مديرية المرور</span>
-            </div>
-
-            <div class="service-card" onclick="checkAccess('شؤون الجوازات')">
-                <span class="icon">🛂</span>
-                <span>شؤون الجوازات</span>
-            </div>
-
-            <div class="service-card" onclick="checkAccess('مكافحة المخدرات')">
-                <span class="icon">💊</span>
-                <span>مكافحة المخدرات</span>
-            </div>
-
-            <div class="service-card" onclick="checkAccess('الأدلة الجنائية')">
-                <span class="icon">🔬</span>
-                <span>الأدلة الجنائية</span>
-            </div>
-
-            <div class="service-card intel-card" onclick="checkAccess('مديرية الاستخبارات')">
-                <span class="icon">🦅</span>
-                <span>مديرية الاستخبارات</span>
-            </div>
-
-            <div class="service-card intel-card" onclick="checkAccess('خلية الصقور')">
-                <span class="icon">⚡</span>
-                <span>خلية الصقور</span>
-            </div>
-
-            <div class="service-card cyber-card" onclick="checkSpecialAccess()">
-                <span class="icon">⚠️</span>
-                <span>الابتزاز الإلكتروني</span>
-            </div>
-
-            <div class="service-card" style="background: #ffebee;" onclick="location.href='index.html'">
-                <span class="icon">🔒</span>
-                <span style="color:red">تسجيل الخروج</span>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const MAIN_PASS = "05195688";
-        const CYBER_PASS = "gsuwfayy62828&$@-_7$&_ywiw";
-
-        // التحقق للأقسام العامة
-        function checkAccess(name) {
-            const entry = prompt("يرجى إدخال رمز صلاحية الوصول لقسم (" + name + "):");
-            if (entry === MAIN_PASS) {
-                alert("تم التحقق بنجاح. القسم قيد التطوير حالياً.");
-            } else if (entry !== null) {
-                alert("رمز الصلاحية غير صحيح! تم تسجيل محاولة الدخول.");
+    fetch('features_check.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        if(data.trim() === "ok") {
+            if(featureName === 'ip') {
+                window.location.href = "ip_page.html";
+            } else {
+                alert("تم تفعيل الخاصية بنجاح");
             }
+        } else {
+            alert("عذراً، الرمز غير صحيح!");
         }
-
-        // التحقق الخاص لقسم الابتزاز
-        function checkSpecialAccess() {
-            const entry = prompt("تنبيه أمني: هذا القسم يتطلب مفتاح التشفير الخاص:");
-            if (entry === CYBER_PASS) {
-                alert("تم التحقق من الهوية. جاري فتح منظومة الابتزاز...");
-                window.location.href = "cyber_security.html"; // سيفتح الملف الجديد
-            } else if (entry !== null) {
-                alert("فشل في التحقق! محاولة غير مصرح بها.");
-            }
-        }
-    </script>
-
-    <div class="footer">
-        وزارة الداخلية - جمهورية العراق <br>
-        حقوق الوصول محفوظة للمخوّلين فقط 2026
-    </div>
-</body>
-</html>
+    });
+}
+</script>
