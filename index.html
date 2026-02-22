@@ -1,49 +1,27 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الداخلية العراقية</title>
-    <style>
-        body { font-family: sans-serif; background: #0a0e14; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-card { background: #161b22; padding: 30px; border-radius: 15px; border: 1px solid #c5a059; width: 90%; max-width: 400px; text-align: center; }
-        img { width: 100px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #c5a059; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-    </style>
-</head>
-<body>
-
-<div class="login-card">
-    <img src="IMG_4274.png" alt="شعار الوزارة">
-    <h2>بوابة الدخول الموحدة</h2>
-    <form id="secureLog">
-        <input type="text" id="u" placeholder="اسم المستخدم" required>
-        <input type="password" id="p" placeholder="كلمة المرور" required>
-        <button type="submit">تسجيل الدخول</button>
-    </form>
-</div>
-
 <script>
-    // تشفير الحماية - الرموز مخفية داخل هذه المصفوفة المشفرة
-    const _0x5272=['\x61\x64\x6d\x69\x6e','\x64\x66\x61\x75\x62\x65\x6a\x78\x76\x77\x69\x78\x67\x36\x32\x24\x40\x24\x26\x37\x32\x35\x32\x39\x36\x32\x38\x32\x26\x24\x40\x26\x24\x61\x67\x73','\x64\x61\x73\x68\x62\x6f\x61\x72\x64\x2e\x68\x74\x6d\x6c','\x6c\x6f\x63\x61\x74\x69\x6f\x6e','\x42\x69\x61\x6e\x61\x74\x20\x47\x68\x61\x6c\x61\x74\x21'];
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
     
-    document.getElementById('secureLog').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const user = document.getElementById('u').value;
-        const pass = document.getElementById('p').value;
+    let u = document.getElementById('username').value;
+    let p = document.getElementById('password').value;
 
-        // مقارنة مع القيم المشفرة (admin والرمز الطويل)
-        if (user === _0x5272[0] && pass === _0x5272[1]) {
-            window[_0x5272[3]].href = _0x5272[2];
+    let formData = new FormData();
+    formData.append('u', u);
+    formData.append('p', p);
+
+    // إرسال البيانات للخزنة السيرفر
+    fetch('login.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        // إذا السيرفر جاوب بـ ok يعني الرمز صح
+        if(data.trim() === "ok") {
+            window.location.href = "dashboard.html"; 
         } else {
-            alert(_0x5272[4]);
+            alert("خطأ: الرمز السري غير صحيح!");
         }
     });
-
-    // منع الكليك يمين تماماً
-    document.addEventListener('contextmenu', e => e.preventDefault());
+});
 </script>
-
-</body>
-</html>
