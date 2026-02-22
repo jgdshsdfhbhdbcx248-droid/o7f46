@@ -5,29 +5,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة تسجيل الدخول | وزارة الداخلية</title>
     <style>
-        :root { --primary-color: #1a237e; --bg-color: #f4f7f6; }
-        body { font-family: sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-container { background: white; padding: 40px; border-top: 5px solid var(--primary-color); box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 8px; width: 90%; max-width: 400px; text-align: center; }
-        .logo { width: 120px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; text-align: center; }
-        button { width: 100%; padding: 12px; background-color: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        :root {
+            --primary-color: #1a237e; 
+            --secondary-color: #c5a059; 
+            --bg-color: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-top: 5px solid var(--primary-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background: #fafafa;
+            text-align: left;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .error-msg {
+            color: red;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .footer-text {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #777;
+        }
     </style>
 </head>
 <body>
 
 <div class="login-container">
-    <img src="IMG_4274.png" alt="Logo" class="logo">
+    <img src="IMG_4274.png" alt="شعار وزارة الداخلية" class="logo">
     <h2>بوابة الدخول الموحدة</h2>
-    <input type="text" id="username" placeholder="اسم المستخدم">
-    <input type="password" id="password" placeholder="كلمة المرور">
-    <button id="submitBtn">تسجيل الدخول</button>
+    <div id="errorMessage" class="error-msg">بيانات الدخول غير صحيحة!</div>
+
+    <form id="loginForm">
+        <div class="input-group">
+            <label for="username">اسم المستخدم</label>
+            <input type="text" id="username" placeholder="admin" required>
+        </div>
+        <div class="input-group">
+            <label for="password">كلمة المرور</label>
+            <input type="password" id="password" placeholder="********" required>
+        </div>
+        <button type="submit" id="submitBtn">تسجيل الدخول</button>
+    </form>
+
+    <div class="footer-text">© 2026 جميع الحقوق محفوظة لوزارة الداخلية</div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-<script>
-    // الإعدادات اللي أخذناها من صورتك
+    // المعلومات الخاصة بـ Firebase مالتك
     const firebaseConfig = {
         apiKey: "AIzaSyB5SbOv4dcwrWPz8-QTK9cY02e5a6xsHKY",
         authDomain: "myapp-bc1d6.firebaseapp.com",
@@ -38,26 +128,44 @@
         databaseURL: "https://myapp-bc1d6-default-rtdb.firebaseio.com/"
     };
 
-    // تشغيل النظام
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    // تهيئة النظام
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-    document.getElementById('submitBtn').addEventListener('click', function() {
-        const u = document.getElementById('username').value;
-        const p = document.getElementById('password').value;
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+        const errorDiv = document.getElementById('errorMessage');
+        const btn = document.getElementById('submitBtn');
 
-        // الاتصال المباشر بالخزنة
-        db.ref('login_info').once('value').then((snapshot) => {
-            const data = snapshot.val();
-            if (data && u === data.user && p === data.pass) {
-                window.location.href = "dashboard.html";
+        btn.innerText = "جاري التحقق...";
+        btn.disabled = true;
+
+        const dbRef = ref(db);
+        
+        // جلب البيانات من فرع login_info بداخل Firebase
+        get(child(dbRef, `login_info`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                if (user === data.user && pass === data.pass) {
+                    window.location.href = "dashboard.html"; 
+                } else {
+                    errorDiv.style.display = "block";
+                    btn.innerText = "تسجيل الدخول";
+                    btn.disabled = false;
+                }
             } else {
-                alert("بيانات الدخول غلط! تأكد من السيرفر.");
+                alert("تنبيه: قاعدة البيانات لا تحتوي على بيانات الدخول!");
             }
-        }).catch((err) => {
-            alert("فشل الاتصال: " + err.message);
+        }).catch((error) => {
+            console.error(error);
+            alert("حدث خطأ في الاتصال بالخادم المركزي.");
+            btn.disabled = false;
         });
     });
 </script>
+
 </body>
 </html>
